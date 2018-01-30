@@ -9,6 +9,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.content.PermissionChecker;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
 import android.webkit.PermissionRequest;
 import android.widget.Toast;
 
@@ -101,6 +102,7 @@ public class WelcomeActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.view_welcome);
+        getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
 
         //Android 6.0+ Google升级了权限管理,需要动态请求,仅限Target 23+的时候
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {

@@ -31,9 +31,9 @@ public class mMenuRVAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder h, int p) {
             VH v = (VH) h;
-            v.menuItem.setTag(p);
+            v.itemView.setTag(p);
             v.menuItem.setText(list.get(p));
-            v.menuItem.setOnClickListener(this);
+            v.itemView.setOnClickListener(this);
     }
 
     @Override

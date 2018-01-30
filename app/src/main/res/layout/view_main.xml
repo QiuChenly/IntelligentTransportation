@@ -1,100 +1,101 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v4.widget.DrawerLayout xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:id="@+id/mainDL"
-    xmlns:android="http://schemas.android.com/apk/res/android">
-<LinearLayout
-    android:orientation="vertical"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <android.support.v7.widget.Toolbar
-        android:layout_width="match_parent"
-        android:layout_height="45dp"
-        android:background="#6c666464">
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-            <FrameLayout
-                android:id="@+id/Fl_menuBtn"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:background="?attr/selectableItemBackground"
-                android:layout_centerVertical="true">
-
-            <ImageView
-
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-
-                app:srcCompat="@drawable/ic_menu"
-                android:scaleType="fitCenter"/>
-            </FrameLayout>
-            <TextView
-                android:id="@+id/title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="用户管理"
-                android:textColor="#000"
-                android:textSize="24sp"
-                android:layout_centerInParent="true"/>
-            <LinearLayout
-                android:layout_alignParentEnd="true"
-                android:orientation="horizontal"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent">
-                <Button
-                    android:id="@+id/moreRecharge"
-                    android:layout_weight="1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="批量充值"
-
-                    android:background="?attr/selectableItemBackground"/>
-                <Button
-                    android:id="@+id/rechargeHistory"
-                    android:layout_weight="1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="充值记录"
-                    android:background="?attr/selectableItemBackground"/>
-            </LinearLayout>
-        </RelativeLayout>
-    </android.support.v7.widget.Toolbar>
-    <android.support.v4.view.ViewPager
-        android:id="@+id/mainVP"
+    <android.support.v4.widget.DrawerLayout
+        android:id="@+id/mainDL"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-    </android.support.v4.view.ViewPager>
-</LinearLayout>
-    <android.support.design.widget.NavigationView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_gravity="start">
-        <ScrollView
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
-        <RelativeLayout
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <android.support.design.widget.AppBarLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#3f51b5"
+                android:gravity="bottom">
+
+                <android.support.v7.widget.Toolbar
+                    android:layout_width="match_parent"
+                    android:layout_height="?attr/actionBarSize"
+                    android:layout_marginTop="26dp"
+                    app:contentInsetLeft="0dp"
+                    app:contentInsetStart="0dp">
+
+                    <FrameLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                        <FrameLayout
+                            android:id="@+id/Fl_menuBtn"
+                            android:layout_width="?attr/actionBarSize"
+                            android:layout_height="match_parent"
+                            android:layout_centerVertical="true"
+                            android:background="?attr/selectableItemBackgroundBorderless">
+
+                            <ImageView
+                                android:layout_width="24dp"
+                                android:layout_height="24dp"
+                                android:layout_gravity="center"
+                                app:srcCompat="@drawable/ic_menu" />
+                        </FrameLayout>
+
+                        <TextView
+                            android:id="@+id/title"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerInParent="true"
+                            android:layout_gravity="center"
+                            android:text="用户管理"
+                            android:textColor="#000"
+                            android:textSize="24sp" />
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_gravity="end"
+                            android:orientation="horizontal">
+
+                            <Button
+                                android:id="@+id/moreRecharge"
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:background="?attr/selectableItemBackground"
+                                android:gravity="center"
+                                android:text="批量充值" />
+
+                            <Button
+                                android:id="@+id/rechargeHistory"
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:background="?attr/selectableItemBackground"
+                                android:gravity="center"
+                                android:text="充值记录" />
+                        </LinearLayout>
+                    </FrameLayout>
+                </android.support.v7.widget.Toolbar>
+            </android.support.design.widget.AppBarLayout>
+
+            <android.support.v4.view.ViewPager
+                android:id="@+id/mainVP"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+            </android.support.v4.view.ViewPager>
+        </LinearLayout>
+
+        <android.support.design.widget.NavigationView
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
-            <ImageView
-                android:id="@+id/nil_navigation_header"
-                android:layout_width="match_parent"
-                android:layout_height="140dp"
-                android:src="@drawable/welcome"
-                android:scaleType="centerCrop"/>
+            android:layout_height="match_parent"
+            android:layout_gravity="start"
+            app:insetForeground="#00000000">
 
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/menuRV"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                app:fastScrollEnabled="false"
-                android:layout_below="@+id/nil_navigation_header">
-
-            </android.support.v7.widget.RecyclerView>
-        </RelativeLayout>
-        </ScrollView>
-    </android.support.design.widget.NavigationView>
-</android.support.v4.widget.DrawerLayout>
+              <include layout="@layout/navigation"/>
+        </android.support.design.widget.NavigationView>
+    </android.support.v4.widget.DrawerLayout>
+</android.support.design.widget.CoordinatorLayout>

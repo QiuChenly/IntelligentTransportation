@@ -1,10 +1,10 @@
 package com.example.liunianyishi.intelligenttransportation.View;
 
 import android.graphics.Rect;
+import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Gravity;
@@ -12,7 +12,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
-import android.widget.GridView;
 import android.widget.TextView;
 
 import com.example.liunianyishi.intelligenttransportation.Adapter.mMainVPAdapter;
@@ -44,6 +43,8 @@ public class MainActivity extends AppCompatActivity implements iPagerEvent, iIte
         super.onCreate(savedInstanceState);
         setContentView(R.layout.view_main);
 
+        getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
+
         moreRecharge = findViewById(R.id.moreRecharge);
         rechargeHistory = findViewById(R.id.rechargeHistory);
         Fl_menuBtn = findViewById(R.id.Fl_menuBtn);
@@ -58,12 +59,6 @@ public class MainActivity extends AppCompatActivity implements iPagerEvent, iIte
         }
         mainDL = findViewById(R.id.mainDL);
         menuRV = findViewById(R.id.menuRV);
-        menuRV.addItemDecoration(new RecyclerView.ItemDecoration() {
-            @Override
-            public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
-                outRect.bottom = 10;
-            }
-        });
         menuRV.setLayoutManager(new LinearLayoutManager(this));
         menuAdapter = new mMenuRVAdapter(stringList, this);
         menuRV.setAdapter(menuAdapter);
