@@ -3,22 +3,54 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
+
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
+        android:elevation="0dp"
+android:background="#4b333333"
         android:layout_height="wrap_content">
 
         <android.support.v7.widget.Toolbar
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:layout_scrollFlags="scroll"
-            app:contentInsetStart="0dp">
+            android:layout_height="200dp"
+            app:popupTheme="@style/Theme.AppCompat.Light"
+            android:layout_marginTop="26dp"
+            app:contentInsetStart="0dp"
+            app:layout_scrollFlags="scroll">
 
-            <ImageView
-                android:id="@+id/nil_navigation_header"
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_marginLeft="22dp"
+                android:gravity="bottom"
+                android:layout_marginBottom="15dp"
                 android:layout_width="match_parent"
-                android:layout_height="140dp"
-                android:scaleType="centerCrop"
-                android:src="@drawable/welcome" />
+                android:layout_height="match_parent">
+
+                <ImageView
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
+                    android:layout_marginBottom="15dp"
+                    android:scaleType="centerCrop"
+                    android:src="@color/colorPrimary" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom"
+                    android:layout_marginBottom="5dp"
+                    android:text="QiuChenly"
+                    android:textColor="#2b2b2b"
+                    android:textSize="29sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom"
+                    android:text="时间就像一阵风,吹过春夏秋冬."
+                    android:textColor="#565656"
+                    android:textSize="18sp" />
+            </LinearLayout>
+
         </android.support.v7.widget.Toolbar>
     </android.support.design.widget.AppBarLayout>
 
