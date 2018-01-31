@@ -16,6 +16,7 @@ class mSP {
         private const val SP_NAME = "transportationSP"
         private const val SP_USER_NAME = "cao_userName"
         private const val SP_USER_PASS = "cao_passWord"
+        private const val SP_REMEMBER_PASS = "rmPass"
         private lateinit var SP: SharedPreferences
         fun initSP(c: Context) {
             SP = c.getSharedPreferences(SP_NAME, Context.MODE_PRIVATE)
@@ -44,5 +45,9 @@ class mSP {
          * 函数写法采用内联(inline)规则
          */
         fun getUserPass(): String = SP.getString(SP_USER_PASS, "")
+
+        fun saveRMPassState(state: Boolean) = SP.edit().putBoolean(SP_REMEMBER_PASS, state).apply()
+
+        fun getRmPassState() = SP.getBoolean(SP_REMEMBER_PASS, false)
     }
 }
