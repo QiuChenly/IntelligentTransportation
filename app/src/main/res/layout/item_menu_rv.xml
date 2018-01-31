@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--侧滑栏item-->
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:background="?attr/selectableItemBackground"
@@ -24,5 +25,6 @@
         android:layout_height="wrap_content"
         android:gravity="center_vertical"
         android:text="TextItem"
+        android:textColor="#212121"
         android:textSize="20sp" />
 </RelativeLayout>

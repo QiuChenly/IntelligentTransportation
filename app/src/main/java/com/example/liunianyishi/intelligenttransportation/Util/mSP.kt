@@ -44,5 +44,9 @@ class mSP {
          * 函数写法采用内联(inline)规则
          */
         fun getUserPass(): String = SP.getString(SP_USER_PASS, "")
+
+        val SP_REMEMBER_PASS = "rmPass"
+        fun saveRMPassState(state: Boolean) = SP.edit().putBoolean(SP_REMEMBER_PASS, state).apply()
+        fun getRMPassState() = SP.getBoolean(SP_REMEMBER_PASS, false)
     }
 }

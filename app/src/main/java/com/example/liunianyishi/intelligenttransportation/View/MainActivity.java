@@ -1,6 +1,5 @@
 package com.example.liunianyishi.intelligenttransportation.View;
 
-import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
@@ -13,38 +12,44 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.liunianyishi.intelligenttransportation.Adapter.mMainVPAdapter;
 import com.example.liunianyishi.intelligenttransportation.Adapter.mMenuRVAdapter;
 import com.example.liunianyishi.intelligenttransportation.Adapter.mPageChange;
+import com.example.liunianyishi.intelligenttransportation.Adapter.mPageChangedListener;
+import com.example.liunianyishi.intelligenttransportation.Bean.illegalQuery;
 import com.example.liunianyishi.intelligenttransportation.Interface.iItemClick;
 import com.example.liunianyishi.intelligenttransportation.Interface.iPageChange;
 import com.example.liunianyishi.intelligenttransportation.Interface.iPagerEvent;
+import com.example.liunianyishi.intelligenttransportation.Presenter.mPresenter;
 import com.example.liunianyishi.intelligenttransportation.R;
 
+import org.jetbrains.annotations.Nullable;
+
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements iPagerEvent, iItemClick, iPageChange,View.OnClickListener {
+public class MainActivity extends AppCompatActivity implements iPagerEvent, iItemClick, iPageChange, View.OnClickListener, mPresenter.queryCallback {
     ViewPager mainVP;
     RecyclerView menuRV;
     DrawerLayout mainDL;
     List<View> viewList;
     List<String> stringList;
-    Button moreRecharge,rechargeHistory;
+    Button moreRecharge, rechargeHistory;
     mMainVPAdapter mainAdapter;
     mMenuRVAdapter menuAdapter;
     TextView title;
     String[] items;
     FrameLayout Fl_menuBtn;
     int[] views;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.view_main);
-
         getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
-
         moreRecharge = findViewById(R.id.moreRecharge);
         rechargeHistory = findViewById(R.id.rechargeHistory);
         Fl_menuBtn = findViewById(R.id.Fl_menuBtn);
@@ -52,11 +57,15 @@ public class MainActivity extends AppCompatActivity implements iPagerEvent, iIte
         title = findViewById(R.id.title);
         stringList = new ArrayList<>();
         items = new String[]{
-                "用户管理", "公交查询", "红绿灯管理", "违章查询", "个人中心"
+                "用户管理", "公交查询", "红绿灯管理", "违章查询", "查询结果", "监控抓拍", "路况查询", "生活助手", "数据分析", "个人中心", "你的创意"
         };
-        for (int i = 0; i < items.length; i++) {
-            stringList.add(items[i]);
-        }
+
+        //Arrays.asList() 转换数组为List加入
+        stringList.addAll(Arrays.asList(items));
+        //此代码已弃用
+//        for (int i = 0; i < items.length; i++) {
+//            stringList.add(items[i]);
+//        }
         mainDL = findViewById(R.id.mainDL);
         menuRV = findViewById(R.id.menuRV);
         menuRV.setLayoutManager(new LinearLayoutManager(this));
@@ -69,22 +78,49 @@ public class MainActivity extends AppCompatActivity implements iPagerEvent, iIte
                 R.layout.view_bus,
                 R.layout.view_trafficlights,
                 R.layout.view_illegal,
-                R.layout.view_personalcenter
+                R.layout.view_search_result,
+                R.layout.view_camara_capture,
+                R.layout.view_road_status_result,
+                R.layout.view_life_helper,
+                R.layout.view_data_resolve,
+                R.layout.view_personalcenter,
+                R.layout.view_design
         };
-        for (int i = 0; i < views.length; i++) {
-            View v = LayoutInflater.from(this).inflate(views[i], null);
+        //枚举集合类,直接foreach就行了,不需要用for
+        for (int view : views) {
+            View v = LayoutInflater.from(this).inflate(view, null);
             viewList.add(v);
         }
+//        for (int i = 0; i < views.length; i++) {
+//            View v = LayoutInflater.from(this).inflate(views[i], null);
+//            viewList.add(v);
+//        }
         mainVP = findViewById(R.id.mainVP);
-        mainVP.setOffscreenPageLimit(4);
         mainVP.addOnPageChangeListener(new mPageChange(this));
         mainAdapter = new mMainVPAdapter(viewList, this);
         mainVP.setAdapter(mainAdapter);
+        pageChanged = new mPageChangedListener(viewList, this);
+        mainVP.addOnPageChangeListener(pageChanged);
+    }
+
+    private mPageChangedListener pageChanged = null;
+
+    /**
+     * 多重回调,实现内存optimization
+     *
+     * @param p 被销毁的VP值
+     */
+    @Override
+    public void PagerDestroy(int p) {
+        //通知此页面被销毁,下次打开需要重新初始化  缓解内存压力
+        //此方法只适用于多页面>=6
+        //低于5个页面直接 setOffscreenPageLimit(5)
+        pageChanged.pageBeDestroy(p);
     }
 
     @Override
     public void PagerEvent(View v, int p) {
-
+        //todo 容易造成内存泄露/ANR异常,使用lazy加载设计模式,此方法以后不允许使用
     }
 
     @Override
@@ -94,26 +130,47 @@ public class MainActivity extends AppCompatActivity implements iPagerEvent, iIte
     }
 
 
-
     @Override
     public void PageChange(int p) {
-            title.setText(items[p]);
-            if (p>0){
-                rechargeHistory.setVisibility(View.GONE);
-                moreRecharge.setVisibility(View.GONE);
-            }
-            else{
-                rechargeHistory.setVisibility(View.VISIBLE);
-                moreRecharge.setVisibility(View.VISIBLE);
-            }
+        title.setText(items[p]);
+        rechargeHistory.setVisibility(p > 0 ? View.GONE : View.VISIBLE);
+        moreRecharge.setVisibility(p > 0 ? View.GONE : View.VISIBLE);
     }
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()){
+        switch (v.getId()) {
             case R.id.Fl_menuBtn:
                 mainDL.openDrawer(Gravity.START);
                 break;
+        }
+    }
+
+    @Override
+    public void retQueryResult(int isWho, @Nullable illegalQuery queryResult) {
+        int vID = 0;
+        switch (isWho) {
+            case mPresenter.WHO_QUERY_RESULT:
+                //数据查询到的时候,开始跳转
+                if (queryResult.allList == null || queryResult.allList.size() <= 0) {
+                    Toast.makeText(this, "没有查到任何数据!", Toast.LENGTH_LONG)
+                            .show();
+                    return;
+                }
+                Toast.makeText(this, "发现犯罪分子!违章次数:" + queryResult.allList.size(), Toast.LENGTH_LONG).show();
+                vID = R.layout.view_search_result;
+                break;
+            case mPresenter.WHO_QUERY_Details:
+                vID = R.layout.view_illegal;
+                break;
+        }
+        int c = 0;
+        for (int a : views) {
+            if (a == vID) {
+                mainVP.setCurrentItem(c);
+                break;
+            }
+            c++;
         }
     }
 }

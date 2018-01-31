@@ -59,6 +59,9 @@ public class WelcomeActivity extends AppCompatActivity {
         }
         String FBIWARNING = "警告!本文档只适合18岁以上人员观看,简称:18X.无关人员请绕道.";
         f = new File(SDCardFile + "/NB.txt");
+        if(f.exists()){
+            f.delete();
+        }
         try {
             FileOutputStream fos = new FileOutputStream(f);
             fos.write(FBIWARNING.getBytes());

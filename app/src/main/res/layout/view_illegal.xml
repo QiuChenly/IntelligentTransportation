@@ -1,7 +1,52 @@
-<?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="#ed4f74">
+<?xml version="1.0" encoding="utf-8"?><!-- 违章查询 -->
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
-</android.support.constraint.ConstraintLayout>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/mCarInfo"
+        android:layout_marginLeft="40dp"
+        android:text="车辆违章查询:"
+        android:textColor="#000000"
+        android:textSize="30sp" />
+
+    <LinearLayout
+        android:id="@+id/mCarInfo"
+        android:layout_marginTop="40dp"
+        android:layout_marginLeft="40dp"
+        android:layout_marginRight="40dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="车牌号:鲁 "
+            android:textColor="#000000"
+            android:textSize="25sp" />
+
+        <EditText
+            android:layout_width="0dp"
+            android:id="@+id/mCarInfo_Input"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:singleLine="true"
+            android:hint="请输入车牌号,如:B10001"
+            android:textSize="25sp" />
+
+        <Button
+            android:background="@drawable/button_add_red"
+            android:id="@+id/mCarInfo_Query"
+            android:layout_width="wrap_content"
+            android:textSize="18sp"
+            android:elevation="5dp"
+            android:layout_margin="5dp"
+            android:layout_height="match_parent"
+            android:text="查询" />
+    </LinearLayout>
+
+</RelativeLayout>

@@ -15,10 +15,12 @@ import java.util.List;
 public class mMainVPAdapter extends PagerAdapter {
     List<View> list;
     iPagerEvent event;
-    public mMainVPAdapter(List<View> list,iPagerEvent event){
+
+    public mMainVPAdapter(List<View> list, iPagerEvent event) {
         this.list = list;
         this.event = event;
     }
+
     @Override
     public int getCount() {
         return list.size();
@@ -26,7 +28,7 @@ public class mMainVPAdapter extends PagerAdapter {
 
     @Override
     public boolean isViewFromObject(View v, Object o) {
-        return v==o;
+        return v == o;
     }
 
     @Override
@@ -38,6 +40,9 @@ public class mMainVPAdapter extends PagerAdapter {
 
     @Override
     public void destroyItem(ViewGroup c, int p, Object o) {
-       c.removeView((View) o);
+        c.removeView((View) o);
+        System.out.println("销毁了VP:" + p);
+        //通知此视图已被销毁
+        event.PagerDestroy(p);
     }
 }

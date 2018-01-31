@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?><!--主界面-->
 <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
@@ -52,7 +52,7 @@
                             android:layout_centerInParent="true"
                             android:layout_gravity="center"
                             android:text="用户管理"
-                            android:textColor="#000"
+                            android:textColor="#fafafa"
                             android:textSize="24sp" />
 
                         <LinearLayout
@@ -67,7 +67,8 @@
                                 android:layout_height="match_parent"
                                 android:background="?attr/selectableItemBackground"
                                 android:gravity="center"
-                                android:text="批量充值" />
+                                android:text="批量充值"
+                                android:textColor="#fafafa" />
 
                             <Button
                                 android:id="@+id/rechargeHistory"
@@ -75,7 +76,8 @@
                                 android:layout_height="match_parent"
                                 android:background="?attr/selectableItemBackground"
                                 android:gravity="center"
-                                android:text="充值记录" />
+                                android:text="充值记录"
+                                android:textColor="#fafafa" />
                         </LinearLayout>
                     </FrameLayout>
                 </android.support.v7.widget.Toolbar>
@@ -95,7 +97,7 @@
             android:layout_gravity="start"
             app:insetForeground="#00000000">
 
-              <include layout="@layout/navigation"/>
+            <include layout="@layout/navigation" />
         </android.support.design.widget.NavigationView>
     </android.support.v4.widget.DrawerLayout>
 </android.support.design.widget.CoordinatorLayout>
