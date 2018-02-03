@@ -146,6 +146,9 @@ public class MainActivity extends AppCompatActivity implements iPagerEvent, iIte
         }
     }
 
+
+    boolean hasNewCarInfo = false;
+    illegalQuery queryResult;
     @Override
     public void retQueryResult(int isWho, @Nullable illegalQuery queryResult) {
         int vID = 0;

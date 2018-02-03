@@ -18,6 +18,7 @@ class LoginActivity : AppCompatActivity(), mPresenter.loginCallback, View.OnClic
         Login_btn_Login.setOnClickListener(this)
         Login_btn_registered.setOnClickListener(this)
         if (mSP.getRMPassState()) {
+            Login_cb_rememberPass.isChecked = true
             Login_et_user.setText(mSP.getUserName())
             Login_et_pass.setText(mSP.getUserPass())
         }
