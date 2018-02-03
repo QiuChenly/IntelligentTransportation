@@ -18,12 +18,14 @@ import com.example.liunianyishi.intelligenttransportation.Adapter.mMainVPAdapter
 import com.example.liunianyishi.intelligenttransportation.Adapter.mMenuRVAdapter;
 import com.example.liunianyishi.intelligenttransportation.Adapter.mPageChange;
 import com.example.liunianyishi.intelligenttransportation.Adapter.mPageChangedListener;
+import com.example.liunianyishi.intelligenttransportation.Bean.illegalCarListBean;
 import com.example.liunianyishi.intelligenttransportation.Bean.illegalQuery;
 import com.example.liunianyishi.intelligenttransportation.Interface.iItemClick;
 import com.example.liunianyishi.intelligenttransportation.Interface.iPageChange;
 import com.example.liunianyishi.intelligenttransportation.Interface.iPagerEvent;
 import com.example.liunianyishi.intelligenttransportation.Presenter.mPresenter;
 import com.example.liunianyishi.intelligenttransportation.R;
+import com.example.liunianyishi.intelligenttransportation.View.ViewReslove.illegalQueryResult;
 
 import org.jetbrains.annotations.Nullable;
 
@@ -31,6 +33,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * QiuChenLuoYe 2018.2.3
+ * 主界面类,全局主页,页面代码托管中转处理,高度解耦合,MVP设计方法
+ */
 public class MainActivity extends AppCompatActivity implements iPagerEvent, iItemClick, iPageChange, View.OnClickListener, mPresenter.queryCallback {
     ViewPager mainVP;
     RecyclerView menuRV;
@@ -147,8 +153,6 @@ public class MainActivity extends AppCompatActivity implements iPagerEvent, iIte
     }
 
 
-    boolean hasNewCarInfo = false;
-    illegalQuery queryResult;
     @Override
     public void retQueryResult(int isWho, @Nullable illegalQuery queryResult) {
         int vID = 0;
@@ -162,19 +166,48 @@ public class MainActivity extends AppCompatActivity implements iPagerEvent, iIte
                 }
                 Toast.makeText(this, "发现犯罪分子!违章次数:" + queryResult.allList.size(), Toast.LENGTH_LONG).show();
                 vID = R.layout.view_search_result;
+                illegalQueryResult s = (illegalQueryResult) pageChanged.getThis(4);
+                if (s == null) {
+                    //修正重复加载的BUG
+                    jumpPage(vID);//首先跳转到此页面,由于使用了lazy技术,导致若不先jump初始化页面,会导致NullPointRefCallException
+                    s = (illegalQueryResult) pageChanged.getThis(4);
+                }
+                //下面开始初始化请求
+                illegalCarListBean bean = new illegalCarListBean();
+                bean.carID = "鲁" + queryResult.carID;//完整车牌号
+                bean.shortCarID = queryResult.carID;
+                for (illegalQuery.result rut : queryResult.allList) {
+                    if (rut.handleState == 1) {
+                        bean.deductCount += rut.DeductInt;
+                        bean.forfeitCount += rut.Forfeit;
+                        bean.noHandleCount++;
+                    }
+                }
+                if (!s.hasItemEx(queryResult.carID)) {
+                    s.addAllResultToCarsRv(bean);
+                } else
+                    //应该同步跳转到对应的记录,懒得做了,题目也没说要
+                    Toast.makeText(this, "此记录已存在!", Toast.LENGTH_SHORT).show();
                 break;
             case mPresenter.WHO_QUERY_Details:
                 vID = R.layout.view_illegal;
                 break;
         }
+        jumpPage(vID);
+    }
+
+    void jumpPage(int id) {
         int c = 0;
         for (int a : views) {
-            if (a == vID) {
-                mainVP.setCurrentItem(c);
+            if (a == id) {
+                //修正 重复设置当前页面的问题
+                if (mainVP.getCurrentItem() != c)
+                    mainVP.setCurrentItem(c);
                 break;
             }
             c++;
         }
     }
 }
+
 

@@ -25,17 +25,16 @@ class LoginActivity : AppCompatActivity(), mPresenter.loginCallback, View.OnClic
     }
 
     /**
-     * 登录结果回调
+     * 登录结果回调,异步请求
      *
      * @param state =1 登陆成功,=2登陆失败
      */
     override fun login_Result(state: Int) {
         if (state == 1) {
             //登录成功处理
-
-            mSP.saveUserPass(u, p)
+            if (Login_cb_rememberPass.isChecked)
+                mSP.saveUserPass(u, p)
             mSP.saveRMPassState(Login_cb_rememberPass.isChecked)
-
             val intent = Intent(this@LoginActivity, MainActivity::class.java)
             startActivity(intent)
         } else {

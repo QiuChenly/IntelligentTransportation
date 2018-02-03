@@ -25,6 +25,7 @@ class mDatabaseHelper(context: Context?, name: String?, factory: SQLiteDatabase.
                 "id integer primary key autoincrement," +
                 "nohandleCount integer not null," +
                 "deduct integer,forfeit integer);"
+        this.writableDatabase.execSQL(crt_Table)
         crt_Table = "create table if not exists $TABLE_QUERYHISTORY_DETAILS(" +
                 "id integer primary key autoincrement," +
                 "nohandleCount integer not null," +

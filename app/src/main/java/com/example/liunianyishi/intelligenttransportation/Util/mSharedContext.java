@@ -15,7 +15,7 @@ import java.io.IOException;
 
 public class mSharedContext extends Application {
     public static Context context;
-   public static String SDCardFile = "";
+    public static String SDCardFile = "";
 
     @Override
     public void onCreate() {
@@ -24,7 +24,10 @@ public class mSharedContext extends Application {
         mSP.Companion.initSP(this);
         //得到SD卡路径
         SDCardFile = Environment.getExternalStorageDirectory() + "/Transportation";
+        DBHelper = new mDatabaseHelper(this.getApplicationContext(),"LYDB",null,1);
     }
+
+    public static mDatabaseHelper DBHelper;
 
     public static Context getContext() {
         return context;

@@ -1,6 +1,7 @@
 package com.example.liunianyishi.intelligenttransportation.Adapter
 
 import android.support.v7.widget.RecyclerView
+import android.telecom.Call
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,7 +17,11 @@ import kotlinx.android.synthetic.main.items_carquery_rv_cars.*
  * Created by qiuchen on 2018/1/31.
  */
 class CarInfoRVAdapter(var queryResult: ArrayList<illegalCarListBean>,
-                       val rv: RecyclerView) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+                       val rv: RecyclerView,
+                       val iGetDetails: CarInfoRVAdapter.importAllObject
+                       )
+    : RecyclerView.Adapter<RecyclerView.ViewHolder>(), View.OnClickListener {
+
     /**
      * 移除数据集合中的实例数据
      */
@@ -45,15 +50,23 @@ class CarInfoRVAdapter(var queryResult: ArrayList<illegalCarListBean>,
                         removeItem(position)
                     })
             this?.findViewById<TextView>(R.id.items_car_id)?.text = s.carID
-            this?.findViewById<TextView>(R.id.items_car_noHandle)?.text = s.noHandleCount.toString()
-            this?.findViewById<TextView>(R.id.items_car_deductScore)?.text = s.deductCount.toString()
-            this?.findViewById<TextView>(R.id.items_car_forfeit)?.text = s.forfeitCount.toString()
+            this?.findViewById<TextView>(R.id.items_car_noHandle)?.text = "未处理违章" + s.noHandleCount.toString() + "次"
+            this?.findViewById<TextView>(R.id.items_car_deductScore)?.text = "扣" + s.deductCount.toString() + "分"
+            this?.findViewById<TextView>(R.id.items_car_forfeit)?.text = "罚款" + s.forfeitCount.toString() + "元"
+            this?.setOnClickListener(this@CarInfoRVAdapter)
+            this?.tag = position
         }
     }
 
-    fun hasItem(carID:String):Boolean{
-         queryResult.forEach{
-            if(it.carID == carID){
+    override fun onClick(p0: View?) {
+        val r = iGetDetails.getDetailsRecyclerV()
+    }
+
+
+
+    fun hasItem(carID: String): Boolean {
+        queryResult.forEach {
+            if (it.carID == carID) {
                 return true
             }
         }
@@ -68,4 +81,8 @@ class CarInfoRVAdapter(var queryResult: ArrayList<illegalCarListBean>,
     }
 
     class mVH(itemView: View?) : RecyclerView.ViewHolder(itemView)
+
+    interface importAllObject{
+        fun getDetailsRecyclerV():RecyclerView
+    }
 }

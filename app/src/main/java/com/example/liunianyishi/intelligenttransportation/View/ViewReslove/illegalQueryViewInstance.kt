@@ -11,7 +11,9 @@ import com.example.liunianyishi.intelligenttransportation.Util.mSharedContext
 /**
  * Created by qiuchen on 2018/1/31.
  */
-class illegalQueryViewInstance(private var v: View, private val cb: mPresenter.queryCallback) : View.OnClickListener, BaseViewResolve(v) {
+class illegalQueryViewInstance(private var v: View,
+                               private val cb: mPresenter.queryCallback)
+    : View.OnClickListener, BaseViewResolve(v) {
 
     val BtnQuery: Button = fb(R.id.mCarInfo_Query, true)
     val EditInputCarID: EditText = fb(R.id.mCarInfo_Input)

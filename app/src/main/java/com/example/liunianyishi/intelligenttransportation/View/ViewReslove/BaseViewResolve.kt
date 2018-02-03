@@ -16,4 +16,7 @@ abstract class BaseViewResolve(private var v: View) : View.OnClickListener {
         t.setOnClickListener(this)
         return t
     }
+
+    //获取View上下文
+    fun getContext() = v.context
 }

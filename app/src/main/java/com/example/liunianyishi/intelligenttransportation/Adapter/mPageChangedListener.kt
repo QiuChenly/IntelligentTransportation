@@ -5,6 +5,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import com.example.liunianyishi.intelligenttransportation.Presenter.mPresenter
+import com.example.liunianyishi.intelligenttransportation.View.ViewReslove.BaseViewResolve
 import com.example.liunianyishi.intelligenttransportation.View.ViewReslove.illegalQueryResult
 import com.example.liunianyishi.intelligenttransportation.View.ViewReslove.illegalQueryViewInstance
 
@@ -29,52 +30,72 @@ class mPageChangedListener(var viewList: MutableList<View>, private val cb: mPre
         println("已收到此页面被销毁的信息:" + p)
     }
 
+    val BaseViewList: HashMap<Int, BaseViewResolve?> = HashMap()
     override fun onPageSelected(position: Int) {
         val state = mViews[position]
         if (state == null || state == false) {
             mViews[position] = true
             val v = viewList[position]
+            var bs: BaseViewResolve? = null
+            //下方bs必须重新赋值,默认为NULL
             when (position) {
                 0 -> {
                     //用户管理
                     with(v) {
 
                     }
+                    bs = null
                 }
                 1 -> {
                     //公交查询
+                    bs = null
                 }
                 2 -> {
                     //红绿灯管理
+                    bs = null
                 }
                 3 -> {
                     //违章查询
-                    illegalQueryViewInstance(v, cb)
+                    bs = illegalQueryViewInstance(v, cb)
                 }
                 4 -> {
                     //查询结果
-                    illegalQueryResult(v, cb)
+                    bs = illegalQueryResult(v, cb)
                 }
                 5 -> {
                     //监控抓拍
+                    bs = null
                 }
                 6 -> {
                     //路况查询
+                    bs = null
                 }
                 7 -> {
                     //生活助手
+                    bs = null
                 }
                 8 -> {
                     //数据分析
+                    bs = null
                 }
                 9 -> {
                     //个人中心
+                    bs = null
                 }
                 10 -> {
                     //你的创意
+                    bs = null
                 }
             }
+            BaseViewList[position] = bs
         }
+    }
+
+    /**
+     * 获取每个页面对应的View托管对象类Instance
+     */
+    fun getThis(currentPage: Int): BaseViewResolve? {
+        return BaseViewList[currentPage]
     }
 
     override fun onPageScrollStateChanged(state: Int) {
