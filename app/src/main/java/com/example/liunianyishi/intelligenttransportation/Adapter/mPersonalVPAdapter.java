@@ -5,22 +5,21 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.liunianyishi.intelligenttransportation.Interface.iPagerEvent;
+import com.example.liunianyishi.intelligenttransportation.Interface.iPersonPagerEvent;
 
 import java.util.List;
 
 /**
- * Created by LiuNianyishi on 2018/1/23.
+ * Created by Administrator on 2018/2/5 0005.
  */
 
-public class mMainVPAdapter extends PagerAdapter {
+public class mPersonalVPAdapter extends PagerAdapter {
     List<View> list;
-    iPagerEvent event;
-
-    public mMainVPAdapter(List<View> list, iPagerEvent event) {
+    iPersonPagerEvent event;
+    public mPersonalVPAdapter(List<View> list,iPersonPagerEvent event){
         this.list = list;
         this.event = event;
     }
-
     @Override
     public int getCount() {
         return list.size();
@@ -34,7 +33,7 @@ public class mMainVPAdapter extends PagerAdapter {
     @Override
     public Object instantiateItem(ViewGroup c, int p) {
         View v = list.get(p);
-        event.PagerEvent(v,p);
+        event.PersonPagerEvent(v,p);
         c.addView(v);
         return v;
     }
@@ -42,8 +41,5 @@ public class mMainVPAdapter extends PagerAdapter {
     @Override
     public void destroyItem(ViewGroup c, int p, Object o) {
         c.removeView((View) o);
-        System.out.println("销毁了VP:" + p);
-        //通知此视图已被销毁
-        event.PagerDestroy(p);
     }
 }

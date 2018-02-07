@@ -7,7 +7,7 @@ import android.view.View;
  */
 
 public interface iPagerEvent {
-    void PagerEvent(View v,int p);
+    void PagerEvent(View v, int p);
 
     /**
      * 当页面被销毁时,此方法被调用

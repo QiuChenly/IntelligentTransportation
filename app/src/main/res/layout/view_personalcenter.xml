@@ -1,8 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- 个人中心 -->
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     android:background="#ede54f">
 
-</android.support.constraint.ConstraintLayout>
+    <android.support.v7.widget.Toolbar
+        android:layout_width="match_parent"
+        android:layout_height="36dp">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <TextView
+                android:id="@+id/personalInfo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="个人信息"
+                android:textSize="20sp"
+                android:textColor="#fff"
+                android:layout_centerVertical="true"
+                android:layout_toStartOf="@+id/rechargeCenter"
+                android:layout_marginEnd="10dp"
+                />
+            <TextView
+                android:id="@+id/rechargeCenter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="20sp"
+                android:text="充值中心"
+                android:textColor="#fff"
+                android:layout_centerInParent="true"/>
+            <TextView
+                android:layout_toEndOf="@+id/rechargeCenter"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="10dp"
+                android:id="@+id/thresholdSetting"
+                android:textColor="#fff"
+                android:textSize="20sp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="阈值设置"/>
+        </RelativeLayout>
+    </android.support.v7.widget.Toolbar>
+    <android.support.v4.view.ViewPager
+        android:id="@+id/personalVP"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    </android.support.v4.view.ViewPager>
+</LinearLayout>

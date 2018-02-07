@@ -1,15 +1,21 @@
 package com.example.liunianyishi.intelligenttransportation.View;
 
+import android.content.DialogInterface;
+import android.graphics.Color;
+import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -18,46 +24,78 @@ import com.example.liunianyishi.intelligenttransportation.Adapter.mMainVPAdapter
 import com.example.liunianyishi.intelligenttransportation.Adapter.mMenuRVAdapter;
 import com.example.liunianyishi.intelligenttransportation.Adapter.mPageChange;
 import com.example.liunianyishi.intelligenttransportation.Adapter.mPageChangedListener;
+import com.example.liunianyishi.intelligenttransportation.Adapter.mPersonalPageChange;
+import com.example.liunianyishi.intelligenttransportation.Adapter.mPersonalVPAdapter;
+import com.example.liunianyishi.intelligenttransportation.Adapter.mRechargeRVAdapter;
+import com.example.liunianyishi.intelligenttransportation.Adapter.mUserManageRVAdapter;
 import com.example.liunianyishi.intelligenttransportation.Bean.illegalCarListBean;
 import com.example.liunianyishi.intelligenttransportation.Bean.illegalQuery;
+import com.example.liunianyishi.intelligenttransportation.DataBase.UserInfo;
+import com.example.liunianyishi.intelligenttransportation.DataBase.mDB;
+import com.example.liunianyishi.intelligenttransportation.Interface.iCarRecharge;
 import com.example.liunianyishi.intelligenttransportation.Interface.iItemClick;
 import com.example.liunianyishi.intelligenttransportation.Interface.iPageChange;
 import com.example.liunianyishi.intelligenttransportation.Interface.iPagerEvent;
+import com.example.liunianyishi.intelligenttransportation.Interface.iPersonPagerEvent;
+import com.example.liunianyishi.intelligenttransportation.Interface.iPersonalPageChange;
 import com.example.liunianyishi.intelligenttransportation.Presenter.mPresenter;
 import com.example.liunianyishi.intelligenttransportation.R;
+import com.example.liunianyishi.intelligenttransportation.Util.mSharedContext;
 import com.example.liunianyishi.intelligenttransportation.View.ViewReslove.illegalQueryResult;
 
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 /**
  * QiuChenLuoYe 2018.2.3
  * 主界面类,全局主页,页面代码托管中转处理,高度解耦合,MVP设计方法
  */
-public class MainActivity extends AppCompatActivity implements iPagerEvent, iItemClick, iPageChange, View.OnClickListener, mPresenter.queryCallback {
-    ViewPager mainVP;
-    RecyclerView menuRV;
+public class MainActivity extends AppCompatActivity implements iPagerEvent,
+        iItemClick, iPageChange, View.OnClickListener, mPresenter.queryCallback,
+        iCarRecharge,iPersonPagerEvent,iPersonalPageChange {
+    ViewPager mainVP,personalVP;
+    RecyclerView menuRV,userRV,rechargeRV;
     DrawerLayout mainDL;
-    List<View> viewList;
+    List<View> viewList,personViews;
     List<String> stringList;
-    Button moreRecharge, rechargeHistory;
+    Button moreRecharge, rechargeHistory,thresholdSetBtn;
     mMainVPAdapter mainAdapter;
     mMenuRVAdapter menuAdapter;
-    TextView title;
+    mPersonalVPAdapter personalAdapter;
+    mUserManageRVAdapter userAdapter;
+    mRechargeRVAdapter rechargeAdapter;
+    TextView title,thresholdSetNow;
+    EditText thresholdValue;
     String[] items;
     FrameLayout Fl_menuBtn;
     int[] views;
-
+    mDB mDB;
+    List<UserInfo> userList;
+    String s;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.view_main);
+        mDB = new mDB();
+//        mDB.CreateUserManage();
+//        mDB.CreateRechargeHistory();
+//        mDB.InsertUserManage(1,"辽A10001","张三",100);
+//        mDB.InsertUserManage(2,"辽A10002","李四",99);
+//        mDB.InsertUserManage(3,"辽A10003","王五",103);
+//        mDB.InsertUserManage(4,"辽A10004","赵六",1);
+        userList = new ArrayList<>();
+        userList = mDB.SearchUserManage();
+
         getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
         moreRecharge = findViewById(R.id.moreRecharge);
+        moreRecharge.setOnClickListener(this);
         rechargeHistory = findViewById(R.id.rechargeHistory);
+        rechargeHistory.setOnClickListener(this);
         Fl_menuBtn = findViewById(R.id.Fl_menuBtn);
         Fl_menuBtn.setOnClickListener(this);
         title = findViewById(R.id.title);
@@ -127,6 +165,58 @@ public class MainActivity extends AppCompatActivity implements iPagerEvent, iIte
     @Override
     public void PagerEvent(View v, int p) {
         //todo 容易造成内存泄露/ANR异常,使用lazy加载设计模式,此方法以后不允许使用
+        switch (p){
+            case 0:
+                userRV = v.findViewById(R.id.UserManageRV);
+                userRV.addItemDecoration(new RecyclerView.ItemDecoration() {
+                    @Override
+                    public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
+                        outRect.bottom = 10;
+                        outRect.left = 5;
+                        outRect.right = 5;
+                    }
+                });
+                userRV.setLayoutManager(new LinearLayoutManager(this));
+                userAdapter = new mUserManageRVAdapter(userList,this);
+                userAdapter.setOnItemClickListener(new mUserManageRVAdapter.onItemClickListener() {
+                    @Override
+                    public void setOnClick(View v, int p) {
+                          userAdapter.setItemChecked(p);
+                    }
+                });
+                userRV.setAdapter(userAdapter);
+                break;
+            case 9:
+                personInfo = v.findViewById(R.id.personalInfo);
+                rechargeCenter = v.findViewById(R.id.rechargeCenter);
+                rechargeCenter.setTextColor(Color.RED);
+                thresholdSetting = v.findViewById(R.id.thresholdSetting);
+                personInfo.setOnClickListener(this);
+                rechargeCenter.setOnClickListener(this);
+                thresholdSetting.setOnClickListener(this);
+                personViews = new ArrayList<>();
+                titleList = new ArrayList<>();
+                titleList.add(personInfo);
+                titleList.add(rechargeCenter);
+                titleList.add(thresholdSetting);
+                int[] Views = new int[]{
+                        R.layout.item_person_info,
+                        R.layout.item_recharge_center,
+                        R.layout.item_threshold_setting
+                };
+                for (int view :Views){
+                    View vi = LayoutInflater.from(this).inflate(view,null);
+                    personViews.add(vi);
+                }
+                personalVP = v.findViewById(R.id.personalVP);
+                personalVP.setOffscreenPageLimit(2);
+
+                personalAdapter = new mPersonalVPAdapter(personViews,this);
+                personalVP.setAdapter(personalAdapter);
+                personalVP.setCurrentItem(1);
+                personalVP.addOnPageChangeListener(new mPersonalPageChange(this));
+                break;
+        }
     }
 
     @Override
@@ -149,9 +239,51 @@ public class MainActivity extends AppCompatActivity implements iPagerEvent, iIte
             case R.id.Fl_menuBtn:
                 mainDL.openDrawer(Gravity.START);
                 break;
+            case R.id.moreRecharge:
+                moreRecharge();
+                break;
+            case R.id.rechargeHistory:
+                mainVP.setCurrentItem(9);
+                break;
+            case R.id.personalInfo:
+                personalVP.setCurrentItem(0);
+                break;
+            case R.id.rechargeCenter:
+                personalVP.setCurrentItem(1);
+                break;
+            case R.id.thresholdSetting:
+                personalVP.setCurrentItem(2);
+                break;
+            case R.id.thresholdSetBtn:
+                if (thresholdValue.getText().equals("")){
+                    Toast.makeText(MainActivity.this,"阈值不能为空",Toast.LENGTH_LONG).show();
+                }else{
+                    thresholdSetNow.setText(thresholdValue.getText().toString());
+                    thresholdValue.setText("");
+                    mSharedContext.threshold = Integer.parseInt(thresholdSetNow.getText().toString());
+                }
+
+                break;
         }
     }
 
+
+   public void moreRecharge() {
+        UserInfo u = new UserInfo();
+        Map<Integer, Boolean> list = userAdapter.getCheckedItems();
+        List<UserInfo> user = userAdapter.getItems();
+        Iterator<Map.Entry<Integer, Boolean>> s = list.entrySet().iterator();
+        List<UserInfo> result = new ArrayList<>();
+        StringBuilder res = new StringBuilder();
+        while (s.hasNext()) {
+            Map.Entry<Integer, Boolean> a = s.next();
+            if (a.getValue()) {
+                result.add(user.get(a.getKey()));
+                res.append(user.get(a.getKey()).carNo).append(",");
+            }
+        }
+        this.CarRecharge(res.toString(),"user1",0);
+    }
 
     @Override
     public void retQueryResult(int isWho, @Nullable illegalQuery queryResult) {
@@ -207,6 +339,112 @@ public class MainActivity extends AppCompatActivity implements iPagerEvent, iIte
             }
             c++;
         }
+    }
+    Button dialog_rechargeBtn,dialog_cancelBtn;
+    TextView getCarNo;
+    EditText getCarMoney;
+
+
+    @Override
+    public void CarRecharge(final String carNo, final String carMaster, final int RechargeMoney) {
+        final AlertDialog.Builder dialog = new AlertDialog.Builder(this);
+        View v = LayoutInflater.from(this).inflate(R.layout.dialog_recharge,null);
+        dialog_rechargeBtn = v.findViewById(R.id.dialog_rechargeBtn);
+        dialog_cancelBtn = v.findViewById(R.id.dialog_cancelBtn);
+        getCarNo = v.findViewById(R.id.getCarNo);
+        getCarMoney = v.findViewById(R.id.getCarMoney);
+        dialog.setView(v);
+
+        getCarNo.setText(carNo);
+        final AlertDialog dialog1 = dialog.show();
+        dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialog) {
+
+            }
+        });
+        dialog_cancelBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog1.cancel();
+            }
+        });
+        dialog_rechargeBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String money = getCarMoney.getText().toString();
+                int m = 0;
+                if (money.equals("")||(m=Integer.parseInt(money))<=0){
+                    Toast.makeText(MainActivity.this,"金额不能为空或小于等于0",Toast.LENGTH_SHORT).show();
+                }
+                else {
+                    if (carNo.contains(",")) {
+
+                        String IDs = carNo.substring(0,carNo.length()-1);
+                        String[] mlist = IDs.split(",");
+                        for (String carNo : mlist){
+                            int t = mDB.mGetMoneyByCarID(carNo)+m;
+                            mDB.InsertRechargeHistory(carNo,carMaster,m);
+                            mDB.UpdateMoney(carNo,t);
+                            userAdapter.addListData(mDB.SearchUserManage());
+                            userAdapter.notifyDataSetChanged();
+                            rechargeAdapter.updateHistory(mDB.SearchRechargeHistory());
+                            rechargeAdapter.notifyDataSetChanged();
+                            dialog1.cancel();
+
+                        }
+                    } else {
+                        mDB.InsertRechargeHistory(carNo, carMaster, m);
+                        mDB.UpdateMoney(carNo, RechargeMoney + m);
+
+                        Toast.makeText(MainActivity.this, "充值成功！", Toast.LENGTH_LONG).show();
+                        userAdapter.addListData(mDB.SearchUserManage());
+                        userAdapter.notifyDataSetChanged();
+                        rechargeAdapter.updateHistory(mDB.SearchRechargeHistory());
+                        rechargeAdapter.notifyDataSetChanged();
+                        dialog1.cancel();
+                        return;
+                    }
+                }
+            }
+        });
+
+    }
+
+    @Override
+    public void PersonPagerEvent(View v, int p) {
+        switch (p){
+            case 1:
+                rechargeRV = v.findViewById(R.id.rechargeRV);
+                rechargeRV.addItemDecoration(new RecyclerView.ItemDecoration() {
+                    @Override
+                    public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
+                        outRect.bottom = 10;
+                        outRect.right = 5;
+                        outRect.left = 5;
+                    }
+                });
+                rechargeRV.setLayoutManager(new LinearLayoutManager(this));
+                rechargeAdapter = new mRechargeRVAdapter(mDB.SearchRechargeHistory());
+                rechargeRV.setAdapter(rechargeAdapter);
+                break;
+            case 2:
+                thresholdValue = v.findViewById(R.id.thresholdValue);
+                thresholdSetNow = v.findViewById(R.id.thresholdValueNow);
+                thresholdSetBtn = v.findViewById(R.id.thresholdSetBtn);
+                thresholdSetBtn.setOnClickListener(this);
+                break;
+        }
+    }
+
+    TextView personInfo,rechargeCenter,thresholdSetting;
+    List<TextView> titleList;
+    @Override
+    public void PersonalPageChange(int p) {
+        for (int a=0;a<titleList.size();a++){
+            titleList.get(a).setTextColor(Color.WHITE);
+        }
+        titleList.get(p).setTextColor(Color.RED);
     }
 }
 
