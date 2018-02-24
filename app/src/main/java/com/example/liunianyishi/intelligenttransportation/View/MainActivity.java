@@ -380,24 +380,24 @@ public class MainActivity extends AppCompatActivity implements iPagerEvent,
                         String IDs = carNo.substring(0,carNo.length()-1);
                         String[] mlist = IDs.split(",");
                         for (String carNo : mlist){
-                            int t = mDB.mGetMoneyByCarID(carNo)+m;
-                            mDB.InsertRechargeHistory(carNo,carMaster,m);
-                            mDB.UpdateMoney(carNo,t);
-                            userAdapter.addListData(mDB.SearchUserManage());
+                            int t = mSharedContext.JDBHelper.mGetMoneyByCarID(carNo)+m;
+                            mSharedContext.JDBHelper.InsertRechargeHistory(carNo,carMaster,m);
+                            mSharedContext.JDBHelper.UpdateMoney(carNo,t);
+                            userAdapter.addListData(mSharedContext.JDBHelper.SearchUserManage());
                             userAdapter.notifyDataSetChanged();
-                            rechargeAdapter.updateHistory(mDB.SearchRechargeHistory());
+                            rechargeAdapter.updateHistory(mSharedContext.JDBHelper.SearchRechargeHistory());
                             rechargeAdapter.notifyDataSetChanged();
                             dialog1.cancel();
 
                         }
                     } else {
-                        mDB.InsertRechargeHistory(carNo, carMaster, m);
-                        mDB.UpdateMoney(carNo, RechargeMoney + m);
+                        mSharedContext.JDBHelper.InsertRechargeHistory(carNo, carMaster, m);
+                        mSharedContext.JDBHelper.UpdateMoney(carNo, RechargeMoney + m);
 
                         Toast.makeText(MainActivity.this, "充值成功！", Toast.LENGTH_LONG).show();
-                        userAdapter.addListData(mDB.SearchUserManage());
+                        userAdapter.addListData(mSharedContext.JDBHelper.SearchUserManage());
                         userAdapter.notifyDataSetChanged();
-                        rechargeAdapter.updateHistory(mDB.SearchRechargeHistory());
+                        rechargeAdapter.updateHistory(mSharedContext.JDBHelper.SearchRechargeHistory());
                         rechargeAdapter.notifyDataSetChanged();
                         dialog1.cancel();
                         return;
@@ -422,7 +422,7 @@ public class MainActivity extends AppCompatActivity implements iPagerEvent,
                     }
                 });
                 rechargeRV.setLayoutManager(new LinearLayoutManager(this));
-                rechargeAdapter = new mRechargeRVAdapter(mDB.SearchRechargeHistory());
+                rechargeAdapter = new mRechargeRVAdapter(mSharedContext.JDBHelper.SearchRechargeHistory());
                 rechargeRV.setAdapter(rechargeAdapter);
                 break;
             case 2:
