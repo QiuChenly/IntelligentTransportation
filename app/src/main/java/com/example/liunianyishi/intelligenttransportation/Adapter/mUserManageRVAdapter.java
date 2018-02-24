@@ -16,7 +16,7 @@ import android.widget.TextView;
 import com.example.liunianyishi.intelligenttransportation.DataBase.UserInfo;
 import com.example.liunianyishi.intelligenttransportation.Interface.iCarRecharge;
 import com.example.liunianyishi.intelligenttransportation.R;
-import com.example.liunianyishi.intelligenttransportation.Util.mSharedContext;
+import com.example.liunianyishi.intelligenttransportation.Utils.mSharedContext;
 import com.example.liunianyishi.intelligenttransportation.View.MainActivity;
 
 import java.util.HashMap;

@@ -4,6 +4,8 @@ import android.app.Application;
 import android.content.Context;
 import android.os.Environment;
 
+import com.example.liunianyishi.intelligenttransportation.DataBase.mDB;
+
 /**
  * Created by LiuNianyishi on 2018/1/24.
  */
@@ -21,9 +23,21 @@ public class mSharedContext extends Application {
         //得到SD卡路径
         SDCardFile = Environment.getExternalStorageDirectory() + "/Transportation";
         DBHelper = new mDatabaseHelper(this.getApplicationContext(),"LYDB",null,1);
+
+        //2018.02.24 QiuChenly
+        //修正 用户管理闪退BUG
+        JDBHelper = new mDB();
+        //初始化数据库表
+        JDBHelper.CreateRechargeHistory();
+        JDBHelper.CreateUserManage();
     }
 
     public static mDatabaseHelper DBHelper;
+    /**
+     * Java代码编写的数据库类
+     * Author:高薛阳
+     */
+    public static mDB JDBHelper;
 
     public static Context getContext() {
         return context;

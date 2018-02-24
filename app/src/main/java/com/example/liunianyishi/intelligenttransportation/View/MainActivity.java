@@ -40,7 +40,7 @@ import com.example.liunianyishi.intelligenttransportation.Interface.iPersonPager
 import com.example.liunianyishi.intelligenttransportation.Interface.iPersonalPageChange;
 import com.example.liunianyishi.intelligenttransportation.Presenter.mPresenter;
 import com.example.liunianyishi.intelligenttransportation.R;
-import com.example.liunianyishi.intelligenttransportation.Util.mSharedContext;
+import com.example.liunianyishi.intelligenttransportation.Utils.mSharedContext;
 import com.example.liunianyishi.intelligenttransportation.View.ViewReslove.illegalQueryResult;
 
 import org.jetbrains.annotations.Nullable;
@@ -74,22 +74,19 @@ public class MainActivity extends AppCompatActivity implements iPagerEvent,
     String[] items;
     FrameLayout Fl_menuBtn;
     int[] views;
-    mDB mDB;
     List<UserInfo> userList;
     String s;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.view_main);
-        mDB = new mDB();
-//        mDB.CreateUserManage();
-//        mDB.CreateRechargeHistory();
 //        mDB.InsertUserManage(1,"辽A10001","张三",100);
 //        mDB.InsertUserManage(2,"辽A10002","李四",99);
 //        mDB.InsertUserManage(3,"辽A10003","王五",103);
 //        mDB.InsertUserManage(4,"辽A10004","赵六",1);
         userList = new ArrayList<>();
-        userList = mDB.SearchUserManage();
+        //改用全局数据管理,局部数据库无法覆盖全局作用范围
+        userList = mSharedContext.JDBHelper.SearchUserManage();
 
         getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
         moreRecharge = findViewById(R.id.moreRecharge);
@@ -164,7 +161,7 @@ public class MainActivity extends AppCompatActivity implements iPagerEvent,
 
     @Override
     public void PagerEvent(View v, int p) {
-        //todo 容易造成内存泄露/ANR异常,使用lazy加载设计模式,此方法以后不允许使用
+        //TODO 容易造成内存泄露/ANR异常,使用lazy加载设计模式,此方法以后不允许使用
         switch (p){
             case 0:
                 userRV = v.findViewById(R.id.UserManageRV);

@@ -5,7 +5,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-import com.example.liunianyishi.intelligenttransportation.Util.mSharedContext;
+import com.example.liunianyishi.intelligenttransportation.Utils.mSharedContext;
 
 import java.security.PublicKey;
 import java.util.ArrayList;
