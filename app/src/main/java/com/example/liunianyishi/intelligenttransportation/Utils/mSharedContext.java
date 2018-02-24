@@ -1,13 +1,8 @@
-package com.example.liunianyishi.intelligenttransportation.Util;
+package com.example.liunianyishi.intelligenttransportation.Utils;
 
 import android.app.Application;
 import android.content.Context;
 import android.os.Environment;
-
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
 
 /**
  * Created by LiuNianyishi on 2018/1/24.

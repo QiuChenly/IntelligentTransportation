@@ -1,8 +1,6 @@
 package com.example.liunianyishi.intelligenttransportation.Bean;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by qiuchen on 2018/1/31.

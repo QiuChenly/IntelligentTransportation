@@ -1,4 +1,4 @@
-package com.example.liunianyishi.intelligenttransportation.Util
+package com.example.liunianyishi.intelligenttransportation.Utils
 
 import android.content.Context
 import android.content.SharedPreferences

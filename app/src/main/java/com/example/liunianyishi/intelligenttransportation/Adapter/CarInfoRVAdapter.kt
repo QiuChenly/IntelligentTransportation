@@ -1,17 +1,13 @@
 package com.example.liunianyishi.intelligenttransportation.Adapter
 
 import android.support.v7.widget.RecyclerView
-import android.telecom.Call
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import com.example.liunianyishi.intelligenttransportation.Bean.illegalCarListBean
-import com.example.liunianyishi.intelligenttransportation.Bean.illegalQuery
 import com.example.liunianyishi.intelligenttransportation.R
-import com.example.liunianyishi.intelligenttransportation.R.id.items_car_id
-import kotlinx.android.synthetic.main.items_carquery_rv_cars.*
 
 /**
  * Created by qiuchen on 2018/1/31.
