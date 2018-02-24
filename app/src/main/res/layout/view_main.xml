@@ -60,7 +60,6 @@
                             android:layout_height="match_parent"
                             android:layout_gravity="end"
                             android:orientation="horizontal">
-
                             <Button
                                 android:id="@+id/moreRecharge"
                                 android:layout_width="wrap_content"
@@ -69,7 +68,6 @@
                                 android:gravity="center"
                                 android:text="批量充值"
                                 android:textColor="#fafafa" />
-
                             <Button
                                 android:id="@+id/rechargeHistory"
                                 android:layout_width="wrap_content"
@@ -98,6 +96,8 @@
             app:insetForeground="#00000000">
 
             <include layout="@layout/navigation" />
+
+
         </android.support.design.widget.NavigationView>
     </android.support.v4.widget.DrawerLayout>
 </android.support.design.widget.CoordinatorLayout>

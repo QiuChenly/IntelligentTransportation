@@ -11,6 +11,7 @@ import android.os.Environment;
 public class mSharedContext extends Application {
     public static Context context;
     public static String SDCardFile = "";
+    public static int threshold = 0;
 
     @Override
     public void onCreate() {
@@ -27,4 +28,6 @@ public class mSharedContext extends Application {
     public static Context getContext() {
         return context;
     }
+
+
 }
