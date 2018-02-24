@@ -23,9 +23,10 @@ public class mSharedContext extends Application {
         //得到SD卡路径
         SDCardFile = Environment.getExternalStorageDirectory() + "/Transportation";
         DBHelper = new mDatabaseHelper(this.getApplicationContext(),"LYDB",null,1);
+        DBHelper.initAllTable();//resolve recursively called
 
         //2018.02.24 QiuChenly
-        //修正 用户管理闪退BUG
+        //fix 用户管理闪退BUG
         JDBHelper = new mDB();
         //初始化数据库表
         JDBHelper.CreateRechargeHistory();

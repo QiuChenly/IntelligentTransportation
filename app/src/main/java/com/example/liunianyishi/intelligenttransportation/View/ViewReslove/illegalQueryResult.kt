@@ -6,6 +6,7 @@ import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.widget.ImageView
+import com.example.liunianyishi.intelligenttransportation.Adapter.CarDetailsAdapter
 import com.example.liunianyishi.intelligenttransportation.Adapter.CarInfoRVAdapter
 import com.example.liunianyishi.intelligenttransportation.Bean.illegalCarListBean
 import com.example.liunianyishi.intelligenttransportation.Presenter.mPresenter
@@ -19,18 +20,33 @@ class illegalQueryResult(v: View, private val cb: mPresenter.queryCallback) : Ba
     private val mAddMore: ImageView = fb(R.id.mSearchResult_AddQuery, true)
     private val mCarsRV: RecyclerView = fb(R.id.mSearchResult_Cars)
     private val mCarDetails: RecyclerView = fb(R.id.mSearchResult_CarDetails)
-    private val carInfoAdapter = CarInfoRVAdapter(ArrayList(), mCarsRV, this)
+    private val carInfoAdapter = CarInfoRVAdapter(mPresenter.GetQueryHistory(), mCarsRV, this)
+    private val carDetailsAdapter = CarDetailsAdapter(ArrayList())
 
     init {
-        mCarsRV.layoutManager = LinearLayoutManager(getContext())
-        mCarsRV.setHasFixedSize(false)
-        mCarsRV.addItemDecoration(object : RecyclerView.ItemDecoration() {
-            override fun getItemOffsets(outRect: Rect?, view: View?, parent: RecyclerView?, state: RecyclerView.State?) {
-                outRect?.bottom = 5
-            }
-        })
-        mCarsRV.itemAnimator = DefaultItemAnimator()
-        mCarsRV.adapter = carInfoAdapter
+        with(mCarsRV) {
+            layoutManager = LinearLayoutManager(v.context)
+            setHasFixedSize(false)
+            addItemDecoration(object : RecyclerView.ItemDecoration() {
+                override fun getItemOffsets(outRect: Rect?, view: View?, parent: RecyclerView?, state: RecyclerView.State?) {
+                    outRect?.bottom = 5
+                }
+            })
+            itemAnimator = DefaultItemAnimator()
+            adapter = carInfoAdapter
+        }
+
+        with(mCarDetails) {
+            layoutManager = LinearLayoutManager(v.context)
+            setHasFixedSize(false)
+            addItemDecoration(object : RecyclerView.ItemDecoration() {
+                override fun getItemOffsets(outRect: Rect?, view: View?, parent: RecyclerView?, state: RecyclerView.State?) {
+                    outRect?.bottom = 5
+                }
+            })
+            itemAnimator = DefaultItemAnimator()
+            adapter = carDetailsAdapter
+        }
     }
 
     fun addAllResultToCarsRv(list: illegalCarListBean) {
@@ -48,7 +64,8 @@ class illegalQueryResult(v: View, private val cb: mPresenter.queryCallback) : Ba
             }
         }
     }
-    override fun getDetailsRecyclerV(): RecyclerView {
-        return mCarDetails
+
+    override fun getDetailsRecyclerV(): CarDetailsAdapter {
+        return carDetailsAdapter
     }
 }

@@ -6,7 +6,7 @@ package com.example.liunianyishi.intelligenttransportation.Bean;
  */
 
 public class illegalCarListBean {
-    //               车牌     短车牌,用来数据库查询
+    //             车牌     短车牌,用来数据库查询
     public String carID, shortCarID;
     //               未处理计数    扣分          罚款
     public int noHandleCount, deductCount, forfeitCount;

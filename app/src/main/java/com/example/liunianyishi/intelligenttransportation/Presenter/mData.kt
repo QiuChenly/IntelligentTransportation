@@ -1,6 +1,6 @@
 package com.example.liunianyishi.intelligenttransportation.Presenter
 
-import com.example.liunianyishi.intelligenttransportation.Bean.illegalQuery
+import com.example.liunianyishi.intelligenttransportation.Bean.illegalQueryBean
 import com.example.liunianyishi.intelligenttransportation.Interface.BaseImpl
 import com.google.gson.Gson
 
@@ -51,10 +51,10 @@ class mData : BaseImpl {
     }
 
     override fun queryillegal(carID: String, cb: mPresenter.queryCallback) {
-        val s = Gson().fromJson<illegalQuery>(queryRet, illegalQuery::class.java)
-        if (carID == s.carID) {
-            return cb.retQueryResult(mPresenter.WHO_QUERY_RESULT, s)
-        } else
-            return cb.retQueryResult(mPresenter.WHO_QUERY_RESULT, illegalQuery())
+        val s = Gson().fromJson<illegalQueryBean>(queryRet, illegalQueryBean::class.java)
+        return if (carID == s.carID)
+            cb.retQueryResult(mPresenter.WHO_QUERY_RESULT, s)
+        else
+            cb.retQueryResult(mPresenter.WHO_QUERY_RESULT, illegalQueryBean())
     }
 }

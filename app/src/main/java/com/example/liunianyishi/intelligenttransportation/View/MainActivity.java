@@ -10,7 +10,6 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -29,9 +28,8 @@ import com.example.liunianyishi.intelligenttransportation.Adapter.mPersonalVPAda
 import com.example.liunianyishi.intelligenttransportation.Adapter.mRechargeRVAdapter;
 import com.example.liunianyishi.intelligenttransportation.Adapter.mUserManageRVAdapter;
 import com.example.liunianyishi.intelligenttransportation.Bean.illegalCarListBean;
-import com.example.liunianyishi.intelligenttransportation.Bean.illegalQuery;
+import com.example.liunianyishi.intelligenttransportation.Bean.illegalQueryBean;
 import com.example.liunianyishi.intelligenttransportation.DataBase.UserInfo;
-import com.example.liunianyishi.intelligenttransportation.DataBase.mDB;
 import com.example.liunianyishi.intelligenttransportation.Interface.iCarRecharge;
 import com.example.liunianyishi.intelligenttransportation.Interface.iItemClick;
 import com.example.liunianyishi.intelligenttransportation.Interface.iPageChange;
@@ -283,7 +281,7 @@ public class MainActivity extends AppCompatActivity implements iPagerEvent,
     }
 
     @Override
-    public void retQueryResult(int isWho, @Nullable illegalQuery queryResult) {
+    public void retQueryResult(int isWho, @Nullable illegalQueryBean queryResult) {
         int vID = 0;
         switch (isWho) {
             case mPresenter.WHO_QUERY_RESULT:
@@ -293,7 +291,6 @@ public class MainActivity extends AppCompatActivity implements iPagerEvent,
                             .show();
                     return;
                 }
-                Toast.makeText(this, "发现犯罪分子!违章次数:" + queryResult.allList.size(), Toast.LENGTH_LONG).show();
                 vID = R.layout.view_search_result;
                 illegalQueryResult s = (illegalQueryResult) pageChanged.getThis(4);
                 if (s == null) {
@@ -305,15 +302,17 @@ public class MainActivity extends AppCompatActivity implements iPagerEvent,
                 illegalCarListBean bean = new illegalCarListBean();
                 bean.carID = "鲁" + queryResult.carID;//完整车牌号
                 bean.shortCarID = queryResult.carID;
-                for (illegalQuery.result rut : queryResult.allList) {
+                for (illegalQueryBean.result rut : queryResult.allList) {
                     if (rut.handleState == 1) {
                         bean.deductCount += rut.DeductInt;
                         bean.forfeitCount += rut.Forfeit;
                         bean.noHandleCount++;
                     }
                 }
-                if (!s.hasItemEx(queryResult.carID)) {
+                if (!s.hasItemEx(bean.carID)) {
                     s.addAllResultToCarsRv(bean);
+                    //解决重复提示
+                    Toast.makeText(this, "发现犯罪分子!违章次数:" + queryResult.allList.size(), Toast.LENGTH_LONG).show();
                 } else
                     //应该同步跳转到对应的记录,懒得做了,题目也没说要
                     Toast.makeText(this, "此记录已存在!", Toast.LENGTH_SHORT).show();
