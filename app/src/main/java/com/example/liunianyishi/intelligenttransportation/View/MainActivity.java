@@ -23,6 +23,7 @@ import com.example.liunianyishi.intelligenttransportation.Adapter.mMainVPAdapter
 import com.example.liunianyishi.intelligenttransportation.Adapter.mMenuRVAdapter;
 import com.example.liunianyishi.intelligenttransportation.Adapter.mPageChange;
 import com.example.liunianyishi.intelligenttransportation.Adapter.mPageChangedListener;
+import com.example.liunianyishi.intelligenttransportation.Adapter.mPersonInofRVAdapter;
 import com.example.liunianyishi.intelligenttransportation.Adapter.mPersonalPageChange;
 import com.example.liunianyishi.intelligenttransportation.Adapter.mPersonalVPAdapter;
 import com.example.liunianyishi.intelligenttransportation.Adapter.mRechargeRVAdapter;
@@ -55,25 +56,27 @@ import java.util.Map;
  */
 public class MainActivity extends AppCompatActivity implements iPagerEvent,
         iItemClick, iPageChange, View.OnClickListener, mPresenter.queryCallback,
-        iCarRecharge,iPersonPagerEvent,iPersonalPageChange {
-    ViewPager mainVP,personalVP;
-    RecyclerView menuRV,userRV,rechargeRV;
+        iCarRecharge, iPersonPagerEvent, iPersonalPageChange {
+    ViewPager mainVP, personalVP;
+    RecyclerView menuRV, userRV, rechargeRV, inofRV;
     DrawerLayout mainDL;
-    List<View> viewList,personViews;
+    List<View> viewList, personViews;
     List<String> stringList;
-    Button moreRecharge, rechargeHistory,thresholdSetBtn;
+    Button moreRecharge, rechargeHistory, thresholdSetBtn;
     mMainVPAdapter mainAdapter;
     mMenuRVAdapter menuAdapter;
     mPersonalVPAdapter personalAdapter;
     mUserManageRVAdapter userAdapter;
     mRechargeRVAdapter rechargeAdapter;
-    TextView title,thresholdSetNow;
+    mPersonInofRVAdapter inofRVAdapter;
+    TextView title, thresholdSetNow;
     EditText thresholdValue;
     String[] items;
     FrameLayout Fl_menuBtn;
     int[] views;
     List<UserInfo> userList;
     String s;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -160,7 +163,7 @@ public class MainActivity extends AppCompatActivity implements iPagerEvent,
     @Override
     public void PagerEvent(View v, int p) {
         //TODO 容易造成内存泄露/ANR异常,使用lazy加载设计模式,此方法以后不允许使用
-        switch (p){
+        switch (p) {
             case 0:
                 userRV = v.findViewById(R.id.UserManageRV);
                 userRV.addItemDecoration(new RecyclerView.ItemDecoration() {
@@ -172,11 +175,11 @@ public class MainActivity extends AppCompatActivity implements iPagerEvent,
                     }
                 });
                 userRV.setLayoutManager(new LinearLayoutManager(this));
-                userAdapter = new mUserManageRVAdapter(userList,this);
+                userAdapter = new mUserManageRVAdapter(userList, this);
                 userAdapter.setOnItemClickListener(new mUserManageRVAdapter.onItemClickListener() {
                     @Override
                     public void setOnClick(View v, int p) {
-                          userAdapter.setItemChecked(p);
+                        userAdapter.setItemChecked(p);
                     }
                 });
                 userRV.setAdapter(userAdapter);
@@ -199,14 +202,14 @@ public class MainActivity extends AppCompatActivity implements iPagerEvent,
                         R.layout.item_recharge_center,
                         R.layout.item_threshold_setting
                 };
-                for (int view :Views){
-                    View vi = LayoutInflater.from(this).inflate(view,null);
+                for (int view : Views) {
+                    View vi = LayoutInflater.from(this).inflate(view, null);
                     personViews.add(vi);
                 }
                 personalVP = v.findViewById(R.id.personalVP);
                 personalVP.setOffscreenPageLimit(2);
 
-                personalAdapter = new mPersonalVPAdapter(personViews,this);
+                personalAdapter = new mPersonalVPAdapter(personViews, this);
                 personalVP.setAdapter(personalAdapter);
                 personalVP.setCurrentItem(1);
                 personalVP.addOnPageChangeListener(new mPersonalPageChange(this));
@@ -250,9 +253,9 @@ public class MainActivity extends AppCompatActivity implements iPagerEvent,
                 personalVP.setCurrentItem(2);
                 break;
             case R.id.thresholdSetBtn:
-                if (thresholdValue.getText().equals("")){
-                    Toast.makeText(MainActivity.this,"阈值不能为空",Toast.LENGTH_LONG).show();
-                }else{
+                if (thresholdValue.getText().equals("")) {
+                    Toast.makeText(MainActivity.this, "阈值不能为空", Toast.LENGTH_LONG).show();
+                } else {
                     thresholdSetNow.setText(thresholdValue.getText().toString());
                     thresholdValue.setText("");
                     mSharedContext.threshold = Integer.parseInt(thresholdSetNow.getText().toString());
@@ -263,7 +266,7 @@ public class MainActivity extends AppCompatActivity implements iPagerEvent,
     }
 
 
-   public void moreRecharge() {
+    public void moreRecharge() {
         UserInfo u = new UserInfo();
         Map<Integer, Boolean> list = userAdapter.getCheckedItems();
         List<UserInfo> user = userAdapter.getItems();
@@ -277,7 +280,7 @@ public class MainActivity extends AppCompatActivity implements iPagerEvent,
                 res.append(user.get(a.getKey()).carNo).append(",");
             }
         }
-        this.CarRecharge(res.toString(),"user1",0);
+        this.CarRecharge(res.toString(), "user1", 0);
     }
 
     @Override
@@ -336,7 +339,8 @@ public class MainActivity extends AppCompatActivity implements iPagerEvent,
             c++;
         }
     }
-    Button dialog_rechargeBtn,dialog_cancelBtn;
+
+    Button dialog_rechargeBtn, dialog_cancelBtn;
     TextView getCarNo;
     EditText getCarMoney;
 
@@ -344,7 +348,7 @@ public class MainActivity extends AppCompatActivity implements iPagerEvent,
     @Override
     public void CarRecharge(final String carNo, final String carMaster, final int RechargeMoney) {
         final AlertDialog.Builder dialog = new AlertDialog.Builder(this);
-        View v = LayoutInflater.from(this).inflate(R.layout.dialog_recharge,null);
+        View v = LayoutInflater.from(this).inflate(R.layout.dialog_recharge, null);
         dialog_rechargeBtn = v.findViewById(R.id.dialog_rechargeBtn);
         dialog_cancelBtn = v.findViewById(R.id.dialog_cancelBtn);
         getCarNo = v.findViewById(R.id.getCarNo);
@@ -370,18 +374,17 @@ public class MainActivity extends AppCompatActivity implements iPagerEvent,
             public void onClick(View v) {
                 String money = getCarMoney.getText().toString();
                 int m = 0;
-                if (money.equals("")||(m=Integer.parseInt(money))<=0){
-                    Toast.makeText(MainActivity.this,"金额不能为空或小于等于0",Toast.LENGTH_SHORT).show();
-                }
-                else {
+                if (money.equals("") || (m = Integer.parseInt(money)) <= 0) {
+                    Toast.makeText(MainActivity.this, "金额不能为空或小于等于0", Toast.LENGTH_SHORT).show();
+                } else {
                     if (carNo.contains(",")) {
 
-                        String IDs = carNo.substring(0,carNo.length()-1);
+                        String IDs = carNo.substring(0, carNo.length() - 1);
                         String[] mlist = IDs.split(",");
-                        for (String carNo : mlist){
-                            int t = mSharedContext.JDBHelper.mGetMoneyByCarID(carNo)+m;
-                            mSharedContext.JDBHelper.InsertRechargeHistory(carNo,carMaster,m);
-                            mSharedContext.JDBHelper.UpdateMoney(carNo,t);
+                        for (String carNo : mlist) {
+                            int t = mSharedContext.JDBHelper.mGetMoneyByCarID(carNo) + m;
+                            mSharedContext.JDBHelper.InsertRechargeHistory(carNo, carMaster, m);
+                            mSharedContext.JDBHelper.UpdateMoney(carNo, t);
                             userAdapter.addListData(mSharedContext.JDBHelper.SearchUserManage());
                             userAdapter.notifyDataSetChanged();
                             rechargeAdapter.updateHistory(mSharedContext.JDBHelper.SearchRechargeHistory());
@@ -409,7 +412,19 @@ public class MainActivity extends AppCompatActivity implements iPagerEvent,
 
     @Override
     public void PersonPagerEvent(View v, int p) {
-        switch (p){
+        switch (p) {
+            case 0:
+                inofRV = v.findViewById(R.id.person_info_RV);
+                inofRV.addItemDecoration(new RecyclerView.ItemDecoration() {
+                    @Override
+                    public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
+                        outRect.bottom = 10;
+                        outRect.right = 5;
+                        outRect.left = 5;
+                    }
+                });
+                inofRV.setLayoutManager(new LinearLayoutManager(this));
+                break;
             case 1:
                 rechargeRV = v.findViewById(R.id.rechargeRV);
                 rechargeRV.addItemDecoration(new RecyclerView.ItemDecoration() {
@@ -433,11 +448,12 @@ public class MainActivity extends AppCompatActivity implements iPagerEvent,
         }
     }
 
-    TextView personInfo,rechargeCenter,thresholdSetting;
+    TextView personInfo, rechargeCenter, thresholdSetting;
     List<TextView> titleList;
+
     @Override
     public void PersonalPageChange(int p) {
-        for (int a=0;a<titleList.size();a++){
+        for (int a = 0; a < titleList.size(); a++) {
             titleList.get(a).setTextColor(Color.WHITE);
         }
         titleList.get(p).setTextColor(Color.RED);
