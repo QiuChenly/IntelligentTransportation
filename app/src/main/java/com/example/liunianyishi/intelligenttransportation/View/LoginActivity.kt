@@ -7,7 +7,7 @@ import android.view.View
 import android.widget.Toast
 import com.example.liunianyishi.intelligenttransportation.Presenter.mPresenter
 import com.example.liunianyishi.intelligenttransportation.R
-import com.example.liunianyishi.intelligenttransportation.Util.mSP
+import com.example.liunianyishi.intelligenttransportation.Utils.mSP
 import kotlinx.android.synthetic.main.view_login.*
 
 class LoginActivity : AppCompatActivity(), mPresenter.loginCallback, View.OnClickListener {

@@ -4,28 +4,23 @@ import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
+import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
-import android.support.v4.content.PermissionChecker;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.view.View;
-import android.webkit.PermissionRequest;
 import android.widget.Toast;
 
 import com.example.liunianyishi.intelligenttransportation.R;
-import com.example.liunianyishi.intelligenttransportation.Util.mSharedContext;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.security.Permission;
 
-import static com.example.liunianyishi.intelligenttransportation.Util.mSharedContext.SDCardFile;
+import static com.example.liunianyishi.intelligenttransportation.Utils.mSharedContext.SDCardFile;
 
 public class WelcomeActivity extends AppCompatActivity {
 

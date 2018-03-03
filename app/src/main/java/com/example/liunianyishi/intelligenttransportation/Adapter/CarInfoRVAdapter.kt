@@ -1,17 +1,15 @@
 package com.example.liunianyishi.intelligenttransportation.Adapter
 
 import android.support.v7.widget.RecyclerView
-import android.telecom.Call
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import com.example.liunianyishi.intelligenttransportation.Bean.illegalCarListBean
-import com.example.liunianyishi.intelligenttransportation.Bean.illegalQuery
+import com.example.liunianyishi.intelligenttransportation.Bean.illegalQueryBean
+import com.example.liunianyishi.intelligenttransportation.Presenter.mPresenter
 import com.example.liunianyishi.intelligenttransportation.R
-import com.example.liunianyishi.intelligenttransportation.R.id.items_car_id
-import kotlinx.android.synthetic.main.items_carquery_rv_cars.*
 
 /**
  * Created by qiuchen on 2018/1/31.
@@ -19,14 +17,14 @@ import kotlinx.android.synthetic.main.items_carquery_rv_cars.*
 class CarInfoRVAdapter(var queryResult: ArrayList<illegalCarListBean>,
                        val rv: RecyclerView,
                        val iGetDetails: CarInfoRVAdapter.importAllObject
-                       )
-    : RecyclerView.Adapter<RecyclerView.ViewHolder>(), View.OnClickListener {
+) : RecyclerView.Adapter<RecyclerView.ViewHolder>(), View.OnClickListener {
 
     /**
      * 移除数据集合中的实例数据
      */
     fun removeItem(id: Int) {
         this.notifyItemRemoved(id)
+        mPresenter.DeleteQueryHistory(queryResult[id].carID)
         queryResult.removeAt(id)
         notifyItemRangeChanged(0, queryResult.size)
     }
@@ -36,6 +34,7 @@ class CarInfoRVAdapter(var queryResult: ArrayList<illegalCarListBean>,
      */
     fun addItem(s: illegalCarListBean) {
         queryResult.add(s)
+        mPresenter.SaveQueryHistory(s)
         this.notifyItemInserted(0)
         notifyItemRangeChanged(0, queryResult.size)
         //需要持有一个RecyclerView实例
@@ -60,16 +59,18 @@ class CarInfoRVAdapter(var queryResult: ArrayList<illegalCarListBean>,
 
     override fun onClick(p0: View?) {
         val r = iGetDetails.getDetailsRecyclerV()
+        //开始设计方法
+        val position = p0?.tag as Int
+        mPresenter.queryillegal(queryResult[position].shortCarID, object : mPresenter.queryCallback {
+            override fun retQueryResult(whois: Int, queryBeanResult: illegalQueryBean?) {
+                r.showData(queryBeanResult!!.allList)
+            }
+        })
     }
 
 
-
     fun hasItem(carID: String): Boolean {
-        queryResult.forEach {
-            if (it.carID == carID) {
-                return true
-            }
-        }
+        queryResult.forEach { if (it.carID == carID) return true }
         return false
     }
 
@@ -82,7 +83,7 @@ class CarInfoRVAdapter(var queryResult: ArrayList<illegalCarListBean>,
 
     class mVH(itemView: View?) : RecyclerView.ViewHolder(itemView)
 
-    interface importAllObject{
-        fun getDetailsRecyclerV():RecyclerView
+    interface importAllObject {
+        fun getDetailsRecyclerV(): CarDetailsAdapter
     }
 }

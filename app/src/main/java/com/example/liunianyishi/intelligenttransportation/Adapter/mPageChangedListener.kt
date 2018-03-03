@@ -2,8 +2,6 @@ package com.example.liunianyishi.intelligenttransportation.Adapter
 
 import android.support.v4.view.ViewPager
 import android.view.View
-import android.view.ViewGroup
-import android.widget.EditText
 import com.example.liunianyishi.intelligenttransportation.Presenter.mPresenter
 import com.example.liunianyishi.intelligenttransportation.View.ViewReslove.BaseViewResolve
 import com.example.liunianyishi.intelligenttransportation.View.ViewReslove.illegalQueryResult

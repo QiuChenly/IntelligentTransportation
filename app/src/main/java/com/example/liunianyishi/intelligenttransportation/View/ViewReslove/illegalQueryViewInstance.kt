@@ -6,7 +6,6 @@ import android.widget.EditText
 import android.widget.Toast
 import com.example.liunianyishi.intelligenttransportation.Presenter.mPresenter
 import com.example.liunianyishi.intelligenttransportation.R
-import com.example.liunianyishi.intelligenttransportation.Util.mSharedContext
 
 /**
  * Created by qiuchen on 2018/1/31.

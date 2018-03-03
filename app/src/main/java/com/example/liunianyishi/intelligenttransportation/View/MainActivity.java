@@ -4,19 +4,21 @@ import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.Rect;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -29,9 +31,8 @@ import com.example.liunianyishi.intelligenttransportation.Adapter.mPersonalVPAda
 import com.example.liunianyishi.intelligenttransportation.Adapter.mRechargeRVAdapter;
 import com.example.liunianyishi.intelligenttransportation.Adapter.mUserManageRVAdapter;
 import com.example.liunianyishi.intelligenttransportation.Bean.illegalCarListBean;
-import com.example.liunianyishi.intelligenttransportation.Bean.illegalQuery;
+import com.example.liunianyishi.intelligenttransportation.Bean.illegalQueryBean;
 import com.example.liunianyishi.intelligenttransportation.DataBase.UserInfo;
-import com.example.liunianyishi.intelligenttransportation.DataBase.mDB;
 import com.example.liunianyishi.intelligenttransportation.Interface.iCarRecharge;
 import com.example.liunianyishi.intelligenttransportation.Interface.iItemClick;
 import com.example.liunianyishi.intelligenttransportation.Interface.iPageChange;
@@ -40,7 +41,8 @@ import com.example.liunianyishi.intelligenttransportation.Interface.iPersonPager
 import com.example.liunianyishi.intelligenttransportation.Interface.iPersonalPageChange;
 import com.example.liunianyishi.intelligenttransportation.Presenter.mPresenter;
 import com.example.liunianyishi.intelligenttransportation.R;
-import com.example.liunianyishi.intelligenttransportation.Util.mSharedContext;
+import com.example.liunianyishi.intelligenttransportation.Utils.mSharedContext;
+import com.example.liunianyishi.intelligenttransportation.Utils.mUtils;
 import com.example.liunianyishi.intelligenttransportation.View.ViewReslove.illegalQueryResult;
 
 import org.jetbrains.annotations.Nullable;
@@ -50,6 +52,8 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
 
 /**
  * QiuChenLuoYe 2018.2.3
@@ -63,33 +67,31 @@ public class MainActivity extends AppCompatActivity implements iPagerEvent,
     DrawerLayout mainDL;
     List<View> viewList,personViews;
     List<String> stringList;
-    Button moreRecharge, rechargeHistory,thresholdSetBtn;
+    Button moreRecharge, rechargeHistory,thresholdSetBtn,busInfoBtn;
     mMainVPAdapter mainAdapter;
     mMenuRVAdapter menuAdapter;
     mPersonalVPAdapter personalAdapter;
     mUserManageRVAdapter userAdapter;
     mRechargeRVAdapter rechargeAdapter;
-    TextView title,thresholdSetNow;
+    TextView title,thresholdSetNow,busDistance1;
     EditText thresholdValue;
     String[] items;
     FrameLayout Fl_menuBtn;
     int[] views;
-    mDB mDB;
     List<UserInfo> userList;
-    String s;
+    LinearLayout centerHospitalStation,lenevoStation,centerHospitalBus,lenevoBus;
+    ImageView arrowImg1,arrowImg2;
+    int t;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.view_main);
-        mDB = new mDB();
-//        mDB.CreateUserManage();
-//        mDB.CreateRechargeHistory();
-//        mDB.InsertUserManage(1,"辽A10001","张三",100);
-//        mDB.InsertUserManage(2,"辽A10002","李四",99);
-//        mDB.InsertUserManage(3,"辽A10003","王五",103);
-//        mDB.InsertUserManage(4,"辽A10004","赵六",1);
+        mUtils.getShare();
         userList = new ArrayList<>();
-        userList = mDB.SearchUserManage();
+        //改用全局数据管理,局部数据库无法覆盖全局作用范围
+        userList = mSharedContext.JDBHelper.SearchUserManage();
+
+        rechargeAdapter = new mRechargeRVAdapter(mSharedContext.JDBHelper.SearchRechargeHistory());
 
         getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
         moreRecharge = findViewById(R.id.moreRecharge);
@@ -164,7 +166,7 @@ public class MainActivity extends AppCompatActivity implements iPagerEvent,
 
     @Override
     public void PagerEvent(View v, int p) {
-        //todo 容易造成内存泄露/ANR异常,使用lazy加载设计模式,此方法以后不允许使用
+        //TODO 容易造成内存泄露/ANR异常,使用lazy加载设计模式,此方法以后不允许使用
         switch (p){
             case 0:
                 userRV = v.findViewById(R.id.UserManageRV);
@@ -185,6 +187,19 @@ public class MainActivity extends AppCompatActivity implements iPagerEvent,
                     }
                 });
                 userRV.setAdapter(userAdapter);
+                break;
+            case 1:
+                centerHospitalStation = v.findViewById(R.id.centerHospitalStation);
+                lenevoStation = v.findViewById(R.id.lenevoStation);
+                lenevoBus = v.findViewById(R.id.lenevoBus);
+                centerHospitalBus = v.findViewById(R.id.centerHospitalBus);
+                arrowImg1 = v.findViewById(R.id.arrowImg1);
+                arrowImg2 = v.findViewById(R.id.arrowImg2);
+                busInfoBtn = v.findViewById(R.id.busInfoBtn);
+                busInfoBtn.setOnClickListener(this);
+                centerHospitalStation.setOnClickListener(this);
+                lenevoStation.setOnClickListener(this);
+                busDistance1 = v.findViewById(R.id.bus_distance1);
                 break;
             case 9:
                 personInfo = v.findViewById(R.id.personalInfo);
@@ -255,13 +270,36 @@ public class MainActivity extends AppCompatActivity implements iPagerEvent,
                 personalVP.setCurrentItem(2);
                 break;
             case R.id.thresholdSetBtn:
-                if (thresholdValue.getText().equals("")){
+                if (thresholdValue.getText().toString().equals("")){
                     Toast.makeText(MainActivity.this,"阈值不能为空",Toast.LENGTH_LONG).show();
                 }else{
                     thresholdSetNow.setText(thresholdValue.getText().toString());
+                    t =  Integer.parseInt(thresholdSetNow.getText().toString());
                     thresholdValue.setText("");
-                    mSharedContext.threshold = Integer.parseInt(thresholdSetNow.getText().toString());
+                    mUtils.put("threshold",t);
                 }
+                break;
+            case R.id.centerHospitalStation:
+                if (centerHospitalBus.getVisibility()==View.VISIBLE){
+                    centerHospitalBus.setVisibility(View.GONE);
+                    arrowImg1.setImageResource(R.drawable.ic_chevron_right_black_24dp);
+                }
+                else{
+                    centerHospitalBus.setVisibility(View.VISIBLE);
+                    arrowImg1.setImageResource(R.drawable.ic_expand_more_black_24dp);
+                }
+                break;
+            case R.id.lenevoStation:
+                if (lenevoBus.getVisibility()==View.VISIBLE){
+                    lenevoBus.setVisibility(View.GONE);
+                    arrowImg2.setImageResource(R.drawable.ic_chevron_right_black_24dp);
+                }
+                else{
+                    lenevoBus.setVisibility(View.VISIBLE);
+                    arrowImg2.setImageResource(R.drawable.ic_expand_more_black_24dp);
+                }
+                break;
+            case R.id.busInfoBtn:
 
                 break;
         }
@@ -286,7 +324,7 @@ public class MainActivity extends AppCompatActivity implements iPagerEvent,
     }
 
     @Override
-    public void retQueryResult(int isWho, @Nullable illegalQuery queryResult) {
+    public void retQueryResult(int isWho, @Nullable illegalQueryBean queryResult) {
         int vID = 0;
         switch (isWho) {
             case mPresenter.WHO_QUERY_RESULT:
@@ -296,7 +334,6 @@ public class MainActivity extends AppCompatActivity implements iPagerEvent,
                             .show();
                     return;
                 }
-                Toast.makeText(this, "发现犯罪分子!违章次数:" + queryResult.allList.size(), Toast.LENGTH_LONG).show();
                 vID = R.layout.view_search_result;
                 illegalQueryResult s = (illegalQueryResult) pageChanged.getThis(4);
                 if (s == null) {
@@ -308,15 +345,17 @@ public class MainActivity extends AppCompatActivity implements iPagerEvent,
                 illegalCarListBean bean = new illegalCarListBean();
                 bean.carID = "鲁" + queryResult.carID;//完整车牌号
                 bean.shortCarID = queryResult.carID;
-                for (illegalQuery.result rut : queryResult.allList) {
+                for (illegalQueryBean.result rut : queryResult.allList) {
                     if (rut.handleState == 1) {
                         bean.deductCount += rut.DeductInt;
                         bean.forfeitCount += rut.Forfeit;
                         bean.noHandleCount++;
                     }
                 }
-                if (!s.hasItemEx(queryResult.carID)) {
+                if (!s.hasItemEx(bean.carID)) {
                     s.addAllResultToCarsRv(bean);
+                    //解决重复提示
+                    Toast.makeText(this, "发现犯罪分子!违章次数:" + queryResult.allList.size(), Toast.LENGTH_LONG).show();
                 } else
                     //应该同步跳转到对应的记录,懒得做了,题目也没说要
                     Toast.makeText(this, "此记录已存在!", Toast.LENGTH_SHORT).show();
@@ -344,7 +383,9 @@ public class MainActivity extends AppCompatActivity implements iPagerEvent,
     TextView getCarNo;
     EditText getCarMoney;
 
+    public void busInfoDialog(){
 
+    }
     @Override
     public void CarRecharge(final String carNo, final String carMaster, final int RechargeMoney) {
         final AlertDialog.Builder dialog = new AlertDialog.Builder(this);
@@ -383,24 +424,23 @@ public class MainActivity extends AppCompatActivity implements iPagerEvent,
                         String IDs = carNo.substring(0,carNo.length()-1);
                         String[] mlist = IDs.split(",");
                         for (String carNo : mlist){
-                            int t = mDB.mGetMoneyByCarID(carNo)+m;
-                            mDB.InsertRechargeHistory(carNo,carMaster,m);
-                            mDB.UpdateMoney(carNo,t);
-                            userAdapter.addListData(mDB.SearchUserManage());
+                            int t = mSharedContext.JDBHelper.mGetMoneyByCarID(carNo)+m;
+                            mSharedContext.JDBHelper.InsertRechargeHistory(carNo,carMaster,m);
+                            mSharedContext.JDBHelper.UpdateMoney(carNo,t);
+                            userAdapter.addListData(mSharedContext.JDBHelper.SearchUserManage());
                             userAdapter.notifyDataSetChanged();
-                            rechargeAdapter.updateHistory(mDB.SearchRechargeHistory());
+                            rechargeAdapter.updateHistory(mSharedContext.JDBHelper.SearchRechargeHistory());
                             rechargeAdapter.notifyDataSetChanged();
                             dialog1.cancel();
 
                         }
                     } else {
-                        mDB.InsertRechargeHistory(carNo, carMaster, m);
-                        mDB.UpdateMoney(carNo, RechargeMoney + m);
-
+                        mSharedContext.JDBHelper.InsertRechargeHistory(carNo, carMaster, m);
+                        mSharedContext.JDBHelper.UpdateMoney(carNo, RechargeMoney + m);
                         Toast.makeText(MainActivity.this, "充值成功！", Toast.LENGTH_LONG).show();
-                        userAdapter.addListData(mDB.SearchUserManage());
+                        userAdapter.addListData(mSharedContext.JDBHelper.SearchUserManage());
                         userAdapter.notifyDataSetChanged();
-                        rechargeAdapter.updateHistory(mDB.SearchRechargeHistory());
+                        rechargeAdapter.updateHistory(mSharedContext.JDBHelper.SearchRechargeHistory());
                         rechargeAdapter.notifyDataSetChanged();
                         dialog1.cancel();
                         return;
@@ -425,14 +465,17 @@ public class MainActivity extends AppCompatActivity implements iPagerEvent,
                     }
                 });
                 rechargeRV.setLayoutManager(new LinearLayoutManager(this));
-                rechargeAdapter = new mRechargeRVAdapter(mDB.SearchRechargeHistory());
+
                 rechargeRV.setAdapter(rechargeAdapter);
                 break;
             case 2:
                 thresholdValue = v.findViewById(R.id.thresholdValue);
                 thresholdSetNow = v.findViewById(R.id.thresholdValueNow);
                 thresholdSetBtn = v.findViewById(R.id.thresholdSetBtn);
+
+                thresholdSetNow.setText(mSharedContext.threshold()+"");
                 thresholdSetBtn.setOnClickListener(this);
+
                 break;
         }
     }

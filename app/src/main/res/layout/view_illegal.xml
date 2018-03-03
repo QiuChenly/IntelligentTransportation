@@ -35,7 +35,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:singleLine="true"
-            android:hint="请输入车牌号,如:B10001"
+            android:hint="请输入车牌号,如:A10001"
             android:textSize="25sp" />
 
         <Button
