@@ -88,7 +88,7 @@ public class mUserManageRVAdapter extends RecyclerView.Adapter<RecyclerView.View
             v.carNo.setText(user.carNo);
             v.carMaster.setText("车主："+ user.carMaster);
             v.carMoney.setText("余额："+ user.carMoney);
-            if (user.carMoney < mSharedContext.threshold()){
+            if (user.carMoney < mSharedContext.threshold){
                 v.carMoney.setTextColor(Color.RED);
             }else{
                 v.carMoney.setTextColor(Color.WHITE);

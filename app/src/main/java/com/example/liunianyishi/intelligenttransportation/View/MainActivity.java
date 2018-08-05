@@ -471,7 +471,7 @@ public class MainActivity extends AppCompatActivity implements iPagerEvent,
                 thresholdSetNow = v.findViewById(R.id.thresholdValueNow);
                 thresholdSetBtn = v.findViewById(R.id.thresholdSetBtn);
 
-                thresholdSetNow.setText(mSharedContext.threshold()+"");
+                thresholdSetNow.setText(mSharedContext.threshold+"");
                 thresholdSetBtn.setOnClickListener(this);
 
                 break;
