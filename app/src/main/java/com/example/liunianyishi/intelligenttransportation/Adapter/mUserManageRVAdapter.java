@@ -33,6 +33,7 @@ public class mUserManageRVAdapter extends RecyclerView.Adapter<RecyclerView.View
     private onItemClickListener onItemClickListener;
     Map<Integer,Boolean> checkboxItems;
     iCarRecharge carRecharge;
+
     public mUserManageRVAdapter(List<UserInfo> list,iCarRecharge carRecharge){
         this.list = list;
         this.carRecharge = carRecharge;
@@ -87,7 +88,7 @@ public class mUserManageRVAdapter extends RecyclerView.Adapter<RecyclerView.View
             v.carNo.setText(user.carNo);
             v.carMaster.setText("车主："+ user.carMaster);
             v.carMoney.setText("余额："+ user.carMoney);
-            if (user.carMoney< mSharedContext.threshold){
+            if (user.carMoney < mSharedContext.threshold()){
                 v.carMoney.setTextColor(Color.RED);
             }else{
                 v.carMoney.setTextColor(Color.WHITE);

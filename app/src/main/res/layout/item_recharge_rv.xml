@@ -8,15 +8,15 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="序号"
-                android:layout_marginStart="20dp"
+                android:layout_marginStart="30dp"
                 android:layout_alignParentStart="true"/>
             <TextView
                 android:id="@+id/historyCarNo"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="车牌号"
                 android:layout_toEndOf="@+id/historyIndex"
-                android:layout_marginStart="100dp"/>
+                android:text="车牌号"
+                android:layout_marginStart="120dp"/>
             <TextView
                 android:id="@+id/historyCarMaster"
                 android:layout_width="wrap_content"
@@ -29,7 +29,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="充值金额"
-                android:layout_marginEnd="20dp"
+                android:layout_marginEnd="50dp"
                 android:layout_alignParentEnd="true"/>
         </RelativeLayout>
 
