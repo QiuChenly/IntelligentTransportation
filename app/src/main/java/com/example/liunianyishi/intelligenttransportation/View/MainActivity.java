@@ -90,9 +90,7 @@ public class MainActivity extends AppCompatActivity implements iPagerEvent,
         userList = new ArrayList<>();
         //改用全局数据管理,局部数据库无法覆盖全局作用范围
         userList = mSharedContext.JDBHelper.SearchUserManage();
-
         rechargeAdapter = new mRechargeRVAdapter(mSharedContext.JDBHelper.SearchRechargeHistory());
-
         getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
         moreRecharge = findViewById(R.id.moreRecharge);
         moreRecharge.setOnClickListener(this);
