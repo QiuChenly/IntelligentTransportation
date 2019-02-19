@@ -4,14 +4,14 @@ import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
-import com.example.liunianyishi.intelligenttransportation.Presenter.mPresenter
+import com.example.liunianyishi.intelligenttransportation.Presenter.MainPresenter
 import com.example.liunianyishi.intelligenttransportation.R
 
 /**
  * Created by qiuchen on 2018/1/31.
  */
 class illegalQueryViewInstance(private var v: View,
-                               private val cb: mPresenter.queryCallback)
+                               private val cb: MainPresenter.queryCallback)
     : View.OnClickListener, BaseViewResolve(v) {
 
     val BtnQuery: Button = fb(R.id.mCarInfo_Query, true)
@@ -25,7 +25,7 @@ class illegalQueryViewInstance(private var v: View,
                             .show()
                     return
                 }
-                mPresenter.queryillegal(EditInputCarID.text.toString(), cb)
+                MainPresenter.queryillegal(EditInputCarID.text.toString(), cb)
             }
         }
     }

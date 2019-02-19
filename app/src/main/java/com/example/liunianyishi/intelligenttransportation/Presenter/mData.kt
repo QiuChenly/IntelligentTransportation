@@ -46,15 +46,15 @@ class mData : BaseImpl {
             "    ]\n" +
             "}"
 
-    override fun login(u: String, p: String, cb: mPresenter.loginCallback) {
+    override fun login(u: String, p: String, cb: MainPresenter.loginCallback) {
         cb.login_Result(1)
     }
 
-    override fun queryillegal(carID: String, cb: mPresenter.queryCallback) {
+    override fun queryillegal(carID: String, cb: MainPresenter.queryCallback) {
         val s = Gson().fromJson<illegalQueryBean>(queryRet, illegalQueryBean::class.java)
         return if (carID == s.carID)
-            cb.retQueryResult(mPresenter.WHO_QUERY_RESULT, s)
+            cb.retQueryResult(MainPresenter.WHO_QUERY_RESULT, s)
         else
-            cb.retQueryResult(mPresenter.WHO_QUERY_RESULT, illegalQueryBean())
+            cb.retQueryResult(MainPresenter.WHO_QUERY_RESULT, illegalQueryBean())
     }
 }

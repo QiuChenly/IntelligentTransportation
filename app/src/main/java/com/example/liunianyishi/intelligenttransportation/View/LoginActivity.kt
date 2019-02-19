@@ -5,12 +5,12 @@ import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.view.View
 import android.widget.Toast
-import com.example.liunianyishi.intelligenttransportation.Presenter.mPresenter
+import com.example.liunianyishi.intelligenttransportation.Presenter.MainPresenter
 import com.example.liunianyishi.intelligenttransportation.R
 import com.example.liunianyishi.intelligenttransportation.Utils.mSP
 import kotlinx.android.synthetic.main.view_login.*
 
-class LoginActivity : AppCompatActivity(), mPresenter.loginCallback, View.OnClickListener {
+class LoginActivity : AppCompatActivity(), MainPresenter.loginCallback, View.OnClickListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -56,7 +56,7 @@ class LoginActivity : AppCompatActivity(), mPresenter.loginCallback, View.OnClic
                     return
                 }
                 //调用登录
-                mPresenter.login(u, p, this)
+                MainPresenter.login(u, p, this)
             }
             Login_btn_registered.id -> Toast.makeText(this, "注册不存在的！", Toast.LENGTH_SHORT).show()
         }

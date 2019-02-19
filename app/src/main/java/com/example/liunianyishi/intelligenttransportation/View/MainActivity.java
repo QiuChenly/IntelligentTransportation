@@ -4,7 +4,6 @@ import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.Rect;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AlertDialog;
@@ -39,7 +38,7 @@ import com.example.liunianyishi.intelligenttransportation.Interface.iPageChange;
 import com.example.liunianyishi.intelligenttransportation.Interface.iPagerEvent;
 import com.example.liunianyishi.intelligenttransportation.Interface.iPersonPagerEvent;
 import com.example.liunianyishi.intelligenttransportation.Interface.iPersonalPageChange;
-import com.example.liunianyishi.intelligenttransportation.Presenter.mPresenter;
+import com.example.liunianyishi.intelligenttransportation.Presenter.MainPresenter;
 import com.example.liunianyishi.intelligenttransportation.R;
 import com.example.liunianyishi.intelligenttransportation.Utils.mSharedContext;
 import com.example.liunianyishi.intelligenttransportation.Utils.mUtils;
@@ -52,15 +51,13 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Timer;
-import java.util.TimerTask;
 
 /**
  * QiuChenLuoYe 2018.2.3
  * 主界面类,全局主页,页面代码托管中转处理,高度解耦合,MVP设计方法
  */
 public class MainActivity extends AppCompatActivity implements iPagerEvent,
-        iItemClick, iPageChange, View.OnClickListener, mPresenter.queryCallback,
+        iItemClick, iPageChange, View.OnClickListener, MainPresenter.queryCallback,
         iCarRecharge,iPersonPagerEvent,iPersonalPageChange {
     ViewPager mainVP,personalVP;
     RecyclerView menuRV,userRV,rechargeRV;
@@ -325,7 +322,7 @@ public class MainActivity extends AppCompatActivity implements iPagerEvent,
     public void retQueryResult(int isWho, @Nullable illegalQueryBean queryResult) {
         int vID = 0;
         switch (isWho) {
-            case mPresenter.WHO_QUERY_RESULT:
+            case MainPresenter.WHO_QUERY_RESULT:
                 //数据查询到的时候,开始跳转
                 if (queryResult.allList == null || queryResult.allList.size() <= 0) {
                     Toast.makeText(this, "没有查到任何数据!", Toast.LENGTH_LONG)
@@ -358,7 +355,7 @@ public class MainActivity extends AppCompatActivity implements iPagerEvent,
                     //应该同步跳转到对应的记录,懒得做了,题目也没说要
                     Toast.makeText(this, "此记录已存在!", Toast.LENGTH_SHORT).show();
                 break;
-            case mPresenter.WHO_QUERY_Details:
+            case MainPresenter.WHO_QUERY_Details:
                 vID = R.layout.view_illegal;
                 break;
         }

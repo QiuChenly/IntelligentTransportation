@@ -2,7 +2,7 @@ package com.example.liunianyishi.intelligenttransportation.Adapter
 
 import android.support.v4.view.ViewPager
 import android.view.View
-import com.example.liunianyishi.intelligenttransportation.Presenter.mPresenter
+import com.example.liunianyishi.intelligenttransportation.Presenter.MainPresenter
 import com.example.liunianyishi.intelligenttransportation.View.ViewReslove.BaseViewResolve
 import com.example.liunianyishi.intelligenttransportation.View.ViewReslove.illegalQueryResult
 import com.example.liunianyishi.intelligenttransportation.View.ViewReslove.illegalQueryViewInstance
@@ -11,7 +11,7 @@ import com.example.liunianyishi.intelligenttransportation.View.ViewReslove.illeg
  * Created by qiuchen on 2018/1/31.
  * optimization RAM
  */
-class mPageChangedListener(var viewList: MutableList<View>, private val cb: mPresenter.queryCallback) : ViewPager.OnPageChangeListener {
+class mPageChangedListener(var viewList: MutableList<View>, private val cb: MainPresenter.queryCallback) : ViewPager.OnPageChangeListener {
     var mViews = HashMap<Int, Boolean>()
 
     init {

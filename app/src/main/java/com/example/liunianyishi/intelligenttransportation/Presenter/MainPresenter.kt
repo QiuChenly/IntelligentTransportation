@@ -1,5 +1,6 @@
 package com.example.liunianyishi.intelligenttransportation.Presenter
 
+import android.annotation.SuppressLint
 import com.example.liunianyishi.intelligenttransportation.Bean.illegalCarListBean
 import com.example.liunianyishi.intelligenttransportation.Bean.illegalQueryBean
 import com.example.liunianyishi.intelligenttransportation.Utils.mSharedContext
@@ -9,7 +10,8 @@ import java.util.*
 /**
  * Created by qiuchen on 2018/1/31.
  */
-class mPresenter {
+class MainPresenter {
+
     companion object {
 
         const val WHO_QUERY_RESULT = 0x001
@@ -30,7 +32,7 @@ class mPresenter {
 
         fun queryillegal(carID: String, cb: queryCallback) {
             data.queryillegal(carID, object : queryCallback {
-                override fun retQueryResult(isWho: Int, queryBeanResult: illegalQueryBean?) {
+                override fun retQueryResult(whois: Int, queryBeanResult: illegalQueryBean?) {
                     cb.retQueryResult(WHO_QUERY_RESULT, queryBeanResult)
                 }
             })
@@ -39,6 +41,7 @@ class mPresenter {
         /**
          * 将时间戳转换为文本
          */
+        @SuppressLint("SimpleDateFormat")
         fun TimeTick2String(string: String): String {
             return SimpleDateFormat("yyy-dd-mm hh:mm:ss").format(Date(string.toLong()))
         }
@@ -53,13 +56,9 @@ class mPresenter {
         /**
          * 获取所有查询历史
          */
-        fun GetQueryHistory(): ArrayList<illegalCarListBean> {
-            return mSharedContext.DBHelper.getAllQueryHistory()
-        }
+        fun GetQueryHistory(): ArrayList<illegalCarListBean> = mSharedContext.DBHelper.getAllQueryHistory()
 
-        fun DeleteQueryHistory(str:String){
-            mSharedContext.DBHelper.deleteQueryInfo(str)
-        }
+        fun DeleteQueryHistory(str: String) = mSharedContext.DBHelper.deleteQueryInfo(str)
     }
 
 

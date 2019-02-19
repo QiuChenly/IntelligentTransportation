@@ -37,14 +37,14 @@ class mSP {
          * 调用:mSP.getUserName()
          * 函数写法采用内联(inline)规则
          */
-        fun getUserName(): String = SP.getString(SP_USER_NAME, "")
+        fun getUserName(): String = SP.getString(SP_USER_NAME, "")!!
 
         /**
          * 得到密码
          * 调用:mSP.getUserPass()
          * 函数写法采用内联(inline)规则
          */
-        fun getUserPass(): String = SP.getString(SP_USER_PASS, "")
+        fun getUserPass(): String = SP.getString(SP_USER_PASS, "")!!
 
         fun saveRMPassState(state: Boolean) = SP.edit().putBoolean(SP_REMEMBER_PASS, state).apply()
         fun getRMPassState() = SP.getBoolean(SP_REMEMBER_PASS, false)
